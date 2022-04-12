@@ -15,5 +15,5 @@ urlpatterns = [
     url(r"^write-new-article/$", CreateArticleView.as_view(), name="write_new"),
     url(r"^drafts/$", DraftsListView.as_view(), name="drafts"),
     url(r"^edit/(?P<pk>\d+)/$", EditArticleView.as_view(), name="edit_article"),
-    url(r"^(?P<slug>[-\w]+)/$", DetailArticleView.as_view(), name="article"),
+    url(r"^(?P<uuid>[-\w]+)/$", DetailArticleView.as_view(), name="article"),
 ]
