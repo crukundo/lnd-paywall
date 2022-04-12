@@ -6,6 +6,7 @@ from django.conf import settings
 from slugify import slugify
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
+import uuid
 
 class ArticleQuerySet(models.query.QuerySet):
     """Personalized queryset created to improve model usability"""
@@ -24,6 +25,7 @@ class Article(models.Model):
     PUBLISHED = "P"
     STATUS = ((DRAFT, _("Draft")), (PUBLISHED, _("Published")))
 
+    uuid = models.UUIDField(unique=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
@@ -56,3 +58,6 @@ class Article(models.Model):
 
     def get_markdown(self):
         return markdownify(self.content)
+
+    def get_absolute_url(self): 
+        return reverse('article', kwargs=[str(self.uuid)])

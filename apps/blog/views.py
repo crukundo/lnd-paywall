@@ -70,3 +70,6 @@ class DetailArticleView(LoginRequiredMixin, DetailView):
     """Basic DetailView implementation to call an individual article."""
 
     model = Article
+
+    def get_object(self, queryset=None):
+        return Article.objects.get(uuid=self.kwargs.get("uuid"))
