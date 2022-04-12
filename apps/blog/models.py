@@ -30,9 +30,6 @@ class Article(models.Model):
         related_name="author",
         on_delete=models.SET_NULL,
     )
-    image = models.ImageField(
-        _("Featured image"), upload_to="articles_pictures/%Y/%m/%d/"
-    )
     timestamp = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255, null=False, unique=True)
     slug = models.SlugField(max_length=80, null=True, blank=True)

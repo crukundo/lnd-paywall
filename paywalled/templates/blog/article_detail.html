@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% load crispy_forms_tags thumbnail humanize %}
+
+{% block title %}{{ article.title|title }}{% endblock %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ article.title|title }}</li>
+        </ol>
+    </nav>
+    <div class="row">
+        <!-- Post Content Column -->
+        <div class="col-lg-8">
+            <!-- Title -->
+            <h1 class="mt-4">{{ article.title|title }}</h1>
+            <!-- Author -->
+            <p class="lead">{% trans 'by' %}
+                <a href="#">{{ article.user.profile.get_screen_name |title }}</a>
+            </p>
+            <hr>
+            <!-- Date/Time -->
+            <p>{% trans 'Posted' %} {{ article.timestamp|naturaltime }} </p>
+            <hr>
+            <hr>
+            <!-- Post Content -->
+            <p class="card-text">{{ article.get_markdown|safe }}</p>
+            <hr>
+        </div>
+
+        <!-- Sidebar Widgets Column -->
+        <div class="col-md-4">
+
+            <!-- Write Article Widget -->
+            {% if request.user.is_authenticated %}
+            <div class="card my-4">
+                <div class="card-body text-center">
+                    <a class="btn btn-success" href="{% url 'articles:write_new' %}"
+                        title="{% trans 'Write a new article' %}"><i class="fa fa-pencil" aria-hidden="true"></i>
+                        {% trans 'New Article' %}</a>
+                    <a class="btn btn-primary" href="{% url 'articles:edit_article' article.id %}"
+                        title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                        {% trans 'Edit' %}</a>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+{% endblock content %}

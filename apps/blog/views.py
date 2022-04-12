@@ -18,7 +18,6 @@ class ArticlesListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        context["popular_tags"] = Article.objects.get_counted_tags()
         return context
 
     def get_queryset(self, **kwargs):
@@ -39,7 +38,7 @@ class CreateArticleView(LoginRequiredMixin, CreateView):
     model = Article
     message = _("Your article has been created.")
     form_class = ArticleForm
-    template_name = "articles/article_create.html"
+    template_name = "blog/create_article.html"
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -56,7 +55,7 @@ class EditArticleView(LoginRequiredMixin, AuthorRequiredMixin, UpdateView):
     model = Article
     message = _("Your article has been updated.")
     form_class = ArticleForm
-    template_name = "articles/article_update.html"
+    template_name = "blog/update_article.html"
 
     def form_valid(self, form):
         form.instance.user = self.request.user

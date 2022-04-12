@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static i18n %}
+{% load humanize thumbnail %}
+
+{% block title %} {% trans 'Articles' %} {% endblock %}
+
+{% block head %}
+
+{% endblock head %}
+
+{% block content %}
+
+<!-- Page Content -->
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
+        </ol>
+    </nav>
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-8 mx-auto">
+            {% for article in articles %}
+            <!-- Blog Post -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title">{{ article.title|title }}</h2>
+                    <p class="card-text">{{ article.get_markdown|safe|truncatechars:150 }}</p>
+                    <a href="{% url 'articles:article' article.slug %}" class="btn btn-primary">{% trans 'Read More' %}
+                        &rarr;</a>
+                </div>
+                <div class="card-footer text-muted">
+                    {% trans 'Posted' %} {{ article.timestamp|naturaltime }}
+                    <i class="lead fa fa-user"></i>
+                    &nbsp;by&nbsp; <a href="#">{{ article.user.profile.get_screen_name|title }}</a>
+                    {% for tag in article.tags.names %}
+                    <a href="#">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% empty %}
+            <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
+                    href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a></h4>
+            {% endfor %}
+
+            {% if is_paginated %}
+            <ul class="pagination justify-content-center mb-4">
+                {% if page_obj.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr;
+                        {% trans 'Newer' %}</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#"><span>&larr;</span></a></li>
+                {% endif %}
+                {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item disabled"><a class="page-link" href="#">{{ i }} <span
+                            class="sr-only">(current)</span></a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                <li class="page-item"><a class="page-link"
+                        href="?page={{ page_obj.next_page_number }}">{% trans 'Older' %} &rarr;</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#"><span>&rarr;</span></a></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+
+        </div>
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+
+{% endblock content %}

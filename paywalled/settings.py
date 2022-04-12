@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
+
     'compressor',
+    'sorl.thumbnail',
+    'markdownx',
     'crispy_forms',
     'apps.authentication',
     'apps.accounts',
@@ -155,3 +159,5 @@ DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
