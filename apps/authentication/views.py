@@ -40,5 +40,4 @@ class SignUpView(FormView):
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
-        kwargs.update(invite=self.invite)
         return super().get_context_data(**kwargs)

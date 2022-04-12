@@ -37,6 +37,4 @@ class SignUpForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=commit)
-        if commit:
-            self.accept_invite(user)
         return user

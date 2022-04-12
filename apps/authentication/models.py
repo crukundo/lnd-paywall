@@ -6,8 +6,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.utils.translation import gettext_lazy as _
 
-from apps.blog.models import Entry
-
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("user"))
@@ -49,14 +47,6 @@ class Profile(models.Model):
                 return self.user.username
         except Exception:
             return self.user.username
-
-    def get_blogs(self):
-        user_blogs = []
-        author_blogs = Entry.objects.select_related("author__profile").filter(author=self.user)
-        for r in author_blogs:
-            user_blogs.append(r)
-        user_blogs.sort(key=lambda r: r.last_update, reverse=True)
-        return user_blogs
 
 
 def create_user_profile(sender, instance, created, **kwargs):

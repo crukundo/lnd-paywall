@@ -1,0 +1,8 @@
+{% with formset.management_form as form %}
+{% include 'bamby_forms/uni_form.html' %}
+{% endwith %}
+{% for form in formset %}
+<div class="multiField">
+  {% include 'bamby_forms/uni_form.html' %}
+</div>
+{% endfor %}

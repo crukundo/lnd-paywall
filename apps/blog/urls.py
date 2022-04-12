@@ -1,10 +1,18 @@
-from django.urls import path
+from django.conf.urls import url
 
-from apps.blog import views
+from apps.blog.views import (
+    ArticlesListView,
+    DraftsListView,
+    CreateArticleView,
+    EditArticleView,
+    DetailArticleView,
+)
 
-app_name = "blog"
-
+app_name = "articles"
 urlpatterns = [
-    path("", views.entries, name="entries"),
-    path("<slug:slug>/", views.entry, name="entry"),
+    url(r"^$", ArticlesListView.as_view(), name="list"),
+    url(r"^write-new-article/$", CreateArticleView.as_view(), name="write_new"),
+    url(r"^drafts/$", DraftsListView.as_view(), name="drafts"),
+    url(r"^edit/(?P<pk>\d+)/$", EditArticleView.as_view(), name="edit_article"),
+    url(r"^(?P<slug>[-\w]+)/$", DetailArticleView.as_view(), name="article"),
 ]

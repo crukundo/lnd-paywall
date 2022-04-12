@@ -1,0 +1,49 @@
+{% load static %}
+<header class="app-header app-header-light">
+  <div class="top-bar container">
+    <div class="top-bar-brand">
+      <a href="/"><img src="{% static 'images/logo.svg' %}" height="54"></a>
+    </div>
+    <div class="top-bar-list">
+      <!-- .top-bar-item -->
+      {% block header-far-right %}
+      <div class="top-bar-item top-bar-item-right px-0 d-none d-sm-flex">
+        <ul class="header-nav nav">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="btn btn-link" href="">My article</a>
+          </li>
+          <li class="nav-item">
+            <a class="btn btn-link" href="">Write new article</a>
+          </li>
+          {% endif %}
+        </ul>
+        {% if user.is_authenticated %}
+        <div class="navbar-nav dropdown d-flex">
+          <button class="btn-account w-100" type="button" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false"><span class="user-avatar user-avatar-md mr-lg-0"><img
+                src="{{ user.profile.get_picture }}" alt=""></span> <span
+              class="account-summary pl-lg-2 d-none d-lg-block"><span
+                class="account-name">{{ user.profile.get_screen_name }}</span>
+              <span class="account-description">{{ organisation.title }}</span></span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-arrow mr-3"></div>
+            <h6 class="dropdown-header d-none d-lg-block d-lg-none"> {{ user.profile.get_screen_name }} </h6>
+            <a class="dropdown-item" href=""><span class="dropdown-icon oi oi-person"></span>
+              Profile</a>
+            <a class="dropdown-item" href="{% url 'settings:settings' %}"><span
+                class="dropdown-icon oi oi-pencil"></span> Edit Profile</a>
+            <a class="dropdown-item" href="{% url 'logout' %}"><span class="dropdown-icon oi oi-account-logout"></span>
+              Logout</a>
+          </div><!-- /.dropdown-menu -->
+        </div><!-- /.btn-account -->
+        {% else %}
+        <a class="btn-account btn btn-primary btn-lg" title="Sign up" href="{% url 'signup' %}">Sign up</a>
+        <a class="btn-account btn-default btn-lg" title="Log in" href="{% url 'login' %}">Log in</a>
+        {% endif %}
+      </div><!-- /.top-bar-item -->
+      {% endblock %}
+    </div>
+  </div>
+</header>

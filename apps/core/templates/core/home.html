@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="position-relative pb-5 bg-light">
+    <!-- .sticker -->
+    <div class="sticker">
+        <div class="sticker-item sticker-top-right sticker-soften">
+            <img src="{% static 'images/decoration/cubes.svg' %}" alt="" data-aos="zoom-in"
+                class="aos-init aos-animate">
+        </div>
+        <div class="sticker-item sticker-bottom-left sticker-soften scale-150">
+            <img src="{% static 'images/decoration/cubes.svg' %}" alt="" data-aos="zoom-in"
+                class="aos-init aos-animate">
+        </div>
+    </div><!-- /.sticker -->
+    <!-- .container -->
+    <div class="container position-relative">
+        <h2 class="text-center text-sm-left"> Paywalled</h2>
+        <p class="lead text-muted text-center text-sm-left mb-5">Lets build the lightning network together</p>
+
+    </div><!-- /.container -->
+</section>
+
+{% endblock content %}

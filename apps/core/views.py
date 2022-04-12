@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import RedirectView
-from apps.blog.models import Entry
+from apps.blog.models import Article
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 def home(request):
     if request.user.is_authenticated:
         user_blogs = request.user.profile.get_blogs()
-        latest_blog = Entry.objects.filter(status=Entry.PUBLISHED).order_by("-start_publication").first()
+        latest_blog = Article.objects.filter(status=Article.PUBLISHED).order_by("-start_publication").first()
         return render(
             request,
             "core/home.html",

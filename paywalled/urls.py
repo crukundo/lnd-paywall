@@ -20,14 +20,9 @@ from django.views.generic import RedirectView, TemplateView
 from django.conf import settings
 from django.apps import apps
 from apps.authentication import views as auth_views
-from apps.core.sitemaps import BlogSitemap
 from apps.blog import views as blog_views
 from apps.core import views as core_views
 from django.contrib.sitemaps.views import sitemap
-
-sitemaps = {
-    "blog": BlogSitemap()
-}
 
 urlpatterns = [
     path("", core_views.home, name="home"),
@@ -37,8 +32,9 @@ urlpatterns = [
     path("signin/", RedirectView.as_view(pattern_name="login"), name="signin"),
     path("blog/", include("apps.blog.urls", namespace="blog")),
     path('admin/', admin.site.urls),
-    path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
+    path("sitemap.xml", sitemap, name="sitemap"),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
+    path("settings/", include("apps.accounts.urls", namespace="settings")),
 ]
 
 if settings.DEBUG:
