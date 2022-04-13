@@ -10,4 +10,8 @@ pytz==2021.1
 django-debug-toolbar==3.2.2
 django-markdownx  # https://github.com/neutronX/django-markdownx
 python-slugify  # https://github.com/un33k/python-slugify
-sorl-thumbnail  # https://github.com/jazzband/sorl-thumbnail
+enum34
+googleapis-common-protos>=1.5.6
+grpcio>=1.19.0
+grpcio-tools>=1.19.0
+protobuf>=3.7.0

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'apps.accounts',
     'apps.core',
     'apps.blog',
+    'apps.payments',
 ]
 
 MIDDLEWARE = [
@@ -161,3 +162,12 @@ DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# LND SETTINGS
+MIN_VIEW_AMOUNT = 1000
+MIN_PUBLISH_AMOUNT = 2000
+
+LND_FOLDER = '/Users/collin/lnd'
+LND_MACAROON_FILE = '/Users/collin/lnd/lndrpc/admin.macaroon'
+LND_TLS_CERT_FILE = '/Users/collin/lnd/lndrpc/tls.cert'
+LND_NETWORK = 'regtest'

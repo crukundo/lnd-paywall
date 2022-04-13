@@ -20,4 +20,4 @@ def home(request):
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
     def get_redirect_url(self, *args, **kwargs):
-        return reverse("blog", kwargs={"username": self.request.user.username})
+        return reverse("articles:list")
