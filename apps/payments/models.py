@@ -1,12 +1,17 @@
 from django.db import models
 from django.conf import settings
-from apps.blog.models import Article
+from apps.blog.models import Article    
 
 import codecs
 import grpc
 from lnd_grpc import lnd_grpc
 
-lnrpc = lnd_grpc.Client()
+lnrpc = lnd_grpc.Client(
+    lnd_dir = settings.LND_FOLDER,
+    macaroon_path = settings.LND_MACAROON_FILE,
+    tls_cert_path = settings.LND_TLS_CERT_FILE,
+    network = settings.LND_NETWORK,
+)
 
 # Create your models here.
 
