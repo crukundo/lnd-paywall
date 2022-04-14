@@ -33,7 +33,7 @@
 
 </head>
 
-<body>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
   {% block body %}
   <div class="app container">
     {% block header %}

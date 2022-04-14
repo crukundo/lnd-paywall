@@ -16,3 +16,4 @@ grpcio>=1.19.0
 grpcio-tools>=1.19.0
 protobuf>=3.7.0
 lnd-grpc
+django-htmx==1.9.0

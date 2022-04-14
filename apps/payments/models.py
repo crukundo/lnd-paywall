@@ -23,11 +23,15 @@ class Payment(models.Model):
         ('error', 'Error'),
     )
 
+    PUBLISH = "publish"
+    VIEW = "view"
+    EDIT = "edit"
+    COMMENT = "comment"
     PAYMENT_PURPOSE_CHOICES = (
-        ('publish', 'Publish'),
-        ('view', 'View'),
-        ('edit', 'Edit'),
-        ('comment', 'Comment'),
+        (PUBLISH, 'Publish'),
+        (VIEW, 'View'),
+        (EDIT, 'Edit'),
+        (COMMENT, 'Comment'),
     )
 
     user = models.ForeignKey(

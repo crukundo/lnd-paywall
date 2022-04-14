@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'markdownx',
     'crispy_forms',
+    'django_htmx',
     'apps.authentication',
     'apps.accounts',
     'apps.core',
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_htmx.middleware.HtmxMiddleware'
 ]
 
 ROOT_URLCONF = 'paywalled.urls'

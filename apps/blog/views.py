@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, ListView, UpdateView, DetailView
+from django.views.generic import CreateView, ListView, UpdateView, DetailView, View
 from django.urls import reverse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import ugettext_lazy as _
 
 from apps.authentication.helpers import AuthorRequiredMixin
@@ -30,6 +31,43 @@ class DraftsListView(ArticlesListView):
 
     def get_queryset(self, **kwargs):
         return Article.objects.get_drafts()
+
+# Article Prelease
+class ArticleCreatorView(View):
+    message = _("You have started a new article.")
+
+    def get(self, request, *args, **kwargs):
+        Article(user=request.user).save()
+        messages.success(self.request, self.message)
+        return reverse("articles:edit_article", args=self.pk)
+
+
+def create_new_article(request):
+    article = Article.objects.create(user=request.user)
+    article.save()
+    return redirect(reverse("articles:publish_article", kwargs={'article_uuid': article.uuid}))
+
+
+def publish_new_article(request, article_uuid):
+    article = get_object_or_404(Article, uuid=article_uuid)
+
+    if request.method == "POST":
+        article_form = ArticleForm(request.POST, instance=article)
+        if article_form.is_valid():
+            article_form.save()
+
+    else:
+        article_form = ArticleForm(instance=article)
+    
+    return render(request, "blog/publish_article.html", {
+        'article': article,
+        'form': article_form
+    })
+
+def delete_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.delete()
+    return redirect(reverse("articles:list"))
 
 
 class CreateArticleView(LoginRequiredMixin, CreateView):

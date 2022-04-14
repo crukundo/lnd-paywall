@@ -8,6 +8,16 @@ from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 import uuid
 
+import codecs
+from lnd_grpc import lnd_grpc
+
+lnrpc = lnd_grpc.Client(
+    lnd_dir = settings.LND_FOLDER,
+    macaroon_path = settings.LND_MACAROON_FILE,
+    tls_cert_path = settings.LND_TLS_CERT_FILE,
+    network = settings.LND_NETWORK,
+)
+
 class ArticleQuerySet(models.query.QuerySet):
     """Personalized queryset created to improve model usability"""
 
@@ -33,8 +43,7 @@ class Article(models.Model):
         on_delete=models.SET_NULL,
     )
     timestamp = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=255, null=False, unique=True)
-    slug = models.SlugField(max_length=80, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, unique=True)
     status = models.CharField(max_length=1, choices=STATUS, default=DRAFT)
     content = MarkdownxField()
     edited = models.BooleanField(default=False)
@@ -48,16 +57,23 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(
-                f"{self.user.username}-{self.title}", lowercase=True, max_length=80
-            )
-
-        super().save(*args, **kwargs)
-
     def get_markdown(self):
         return markdownify(self.content)
 
     def get_absolute_url(self): 
         return reverse('article', kwargs=[str(self.uuid)])
+
+    def generate_pub_invoice(self):
+        """
+        Generates a new invoice for publishing
+        """
+        assert self.status == 'pending_invoice', "Already generated invoice"
+
+        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_VIEW_AMOUNT, memo=self.title)
+        r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
+        r_hash = r_hash_base64.decode('utf-8')
+        payment_request = add_invoice_resp.payment_request
+
+        from apps.payments.models import Payment
+        payment = Payment.objects.create(user=self.request.user, article=self.pk, purpose=Payment.PUBLISH, satoshi_amount=settings.MIN_PUBLISH_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
+        payment.save()

@@ -41,6 +41,12 @@
                                     by
                                     {{ article.user.profile.get_screen_name|title }} </p>
                             </div>
+                            <div class="list-group-item-figure">
+                                <a href="{% url 'articles:edit_article' article.pk %}"
+                                    class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'articles:delete_article' article.pk %}"
+                                    class="btn btn-sm btn-light">Delete</a>
+                            </div>
                         </div>
                     </div>
                 </div>
