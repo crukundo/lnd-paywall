@@ -21,28 +21,34 @@
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mx-auto">
-            {% for article in articles %}
-            <!-- Blog Post -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <h2 class="card-title">{{ article.title|title }}</h2>
-                    <p class="card-text">{{ article.get_markdown|safe|truncatechars:150 }}</p>
-                    <a href="{% url 'articles:article' article.uuid %}" class="btn btn-primary">{% trans 'Read More' %}
-                        &rarr;</a>
+            <div class="list-group list-group-flush list-group-divider">
+                {% for article in articles %}
+                <!-- Blog Post -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="list-group-item">
+                            <div class="list-group-item-figure">
+                                <a href="{% url 'articles:article' article.uuid %}"
+                                    class="tile tile-lg tile-circle bg-success">
+                                    <i class="fas fa-bolt fa-fw"></i>
+                                </a>
+                            </div>
+                            <div class="list-group-item-body">
+                                <h4 class="list-group-item-title">
+                                    <a href="{% url 'articles:article' article.uuid %}">{{ article.title|title }}</a>
+                                </h4>
+                                <p class="list-group-item-text">{% trans 'Posted' %} {{ article.timestamp|naturaltime }}
+                                    by
+                                    {{ article.user.profile.get_screen_name|title }} </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-footer text-muted">
-                    {% trans 'Posted' %} {{ article.timestamp|naturaltime }}
-                    <i class="lead fa fa-user"></i>
-                    &nbsp;by&nbsp; <a href="#">{{ article.user.profile.get_screen_name|title }}</a>
-                    {% for tag in article.tags.names %}
-                    <a href="#">{{ tag }}</a>
-                    {% endfor %}
-                </div>
+                {% empty %}
+                <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
+                        href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a></h4>
+                {% endfor %}
             </div>
-            {% empty %}
-            <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
-                    href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a></h4>
-            {% endfor %}
 
             {% if is_paginated %}
             <ul class="pagination justify-content-center mb-4">
@@ -74,5 +80,6 @@
     <!-- /.row -->
 </div>
 <!-- /.container -->
+
 
 {% endblock content %}

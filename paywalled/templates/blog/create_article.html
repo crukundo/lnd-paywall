@@ -21,6 +21,8 @@
         <button type="button" class="btn btn-lg btn-primary publish">{% trans 'Publish Article' %}</button>
         <button type="button" class="btn btn-lg btn-default draft">{% trans 'Save as draft' %}</button>
         <a href="{% url 'articles:list' %}" class="btn btn-lg btn-default">{% trans 'Cancel' %}</a>
+
+        {% include 'partial_invoice.html' %}
     </div>
 </form>
 {{ form.media }}
