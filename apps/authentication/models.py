@@ -9,9 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("user"))
-    public_email = models.EmailField(_("public email"), blank=True)
-    location = models.CharField(_("location"), max_length=50, blank=True)
-    url = models.CharField(_("url"), max_length=50, blank=True)
+    node_pubkey = models.CharField(max_length=80, unique=True, blank=True, null=True)
 
     class Meta:
         verbose_name = _("profile")
@@ -20,24 +18,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.get_screen_name()
-
-    def get_url(self):
-        url = self.url
-        if "http://" not in self.url and "https://" not in self.url and len(self.url) > 0:
-            url = "http://" + str(self.url)
-        return url
-
-    def get_picture(self):
-        no_picture = django_settings.STATIC_URL + "img/user.png"
-        try:
-            filename = f"{django_settings.MEDIA_ROOT}/profile_pictures/{self.user.username}.jpg"
-            picture_url = f"{django_settings.MEDIA_URL}profile_pictures/{self.user.username}.jpg"
-            if os.path.isfile(filename):
-                return picture_url
-            else:
-                return no_picture
-        except Exception:
-            return no_picture
 
     def get_screen_name(self):
         try:

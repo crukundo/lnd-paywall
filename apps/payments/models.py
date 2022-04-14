@@ -3,7 +3,6 @@ from django.conf import settings
 from apps.blog.models import Article    
 
 import codecs
-import grpc
 from lnd_grpc import lnd_grpc
 
 lnrpc = lnd_grpc.Client(

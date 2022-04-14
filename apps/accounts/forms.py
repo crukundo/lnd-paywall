@@ -42,7 +42,7 @@ class ProfileForm(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ("first_name", "last_name", "public_email", "url", "location")
+        fields = ("first_name", "last_name", "node_pubkey")
 
     @transaction.atomic()
     def save(self, commit=True):

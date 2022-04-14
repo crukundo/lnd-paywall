@@ -25,10 +25,9 @@
         <div class="navbar-nav dropdown d-flex">
           <button class="btn-account w-100" type="button" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false"><span class="user-avatar user-avatar-md mr-lg-0"><img
-                src="{{ user.profile.get_picture }}" alt=""></span> <span
+                src="{% static 'images/user.png' %}" alt=""></span> <span
               class="account-summary pl-lg-2 d-none d-lg-block"><span
-                class="account-name">{{ user.profile.get_screen_name }}</span>
-              <span class="account-description">{{ organisation.title }}</span></span>
+                class="account-name">{{ user.profile.get_screen_name }}</span></span>
           </button>
           <div class="dropdown-menu dropdown-menu-right">
             <div class="dropdown-arrow mr-3"></div>
