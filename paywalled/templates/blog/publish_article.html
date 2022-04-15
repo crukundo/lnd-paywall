@@ -14,24 +14,16 @@
         <li class="breadcrumb-item active" aria-current="page">{% trans 'Write a new article' %}</li>
     </ol>
 </nav>
-<form action="{% url 'articles:write_new' %}" enctype="multipart/form-data" id="article-form" method="post" role="form">
+<form method="post">
     {% csrf_token %}
-    {{ form|crispy }}
-    <div class="form-group">
-        <button type="button" class="btn btn-lg btn-primary publish"
-            hx-post="{% url 'payments:generate_pub_invoice' article.uuid %}" hx-target="#publishInvoice"
-            hx-swap="beforeend">{% trans 'Publish Article' %}</button>
-        <button type="button" class="btn btn-lg btn-default draft">{% trans 'Save as draft' %}</button>
-        <a href="{% url 'articles:list' %}" class="btn btn-lg btn-default">{% trans 'Cancel' %}</a>
-
-        <div id="publishInvoice">
-            {% for payment in article.payments.all %}
-            <p class="text-danger">{{ payment.payment_request }}</p>
-            {% endfor %}
-        </div>
-    </div>
+    {% crispy form %}
 </form>
-{{ form.media }}
+
+<div id="publishInvoice">
+    {% for payment in article.payments.all %}
+    <p class="text-danger">{{ payment.payment_request }}</p>
+    {% endfor %}
+</div>
 
 {% endblock content %}
 

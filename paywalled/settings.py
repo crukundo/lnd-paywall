@@ -40,10 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'compressor',
-    'sorl.thumbnail',
-    'markdownx',
     'crispy_forms',
     'django_htmx',
+    'django_summernote',
     'apps.authentication',
     'apps.accounts',
     'apps.core',
@@ -164,6 +163,35 @@ DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# ==============================================================================
+# SUMMERNOTE
+# ==============================================================================
+
+SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
+
+SUMMERNOTE_CONFIG = {
+    "iframe": False,
+    "summernote": {
+        # As an example, using Summernote Air-mode
+        "airMode": False,
+        # Change editor size
+        "width": "100%",
+        "height": "480",
+        # Use proper language setting automatically (default)
+        "lang": None,
+        # Toolbar customization
+        # https://summernote.org/deep-dive/#custom-toolbar-popover
+        "toolbar": [
+            ["style", ["style"]],
+            ["font", ["bold", "underline", "clear"]],
+            ["color", ["color"]],
+            ["para", ["ul", "ol", "paragraph"]],
+            ["table", ["table"]],
+            ["insert", ["link", "picture", "video"]],
+        ],
+    },
+}
 
 # LND SETTINGS
 MIN_VIEW_AMOUNT = 1000

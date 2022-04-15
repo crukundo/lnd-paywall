@@ -11,7 +11,6 @@ from apps.authentication import views as auth_views
 from apps.blog import views as blog_views
 from apps.core import views as core_views
 from django.contrib.sitemaps.views import sitemap
-from markdownx import urls as markdownx
 from django.views import defaults as default_views
 
 urlpatterns = [
@@ -26,7 +25,8 @@ urlpatterns = [
     path("sitemap.xml", sitemap, name="sitemap"),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path("settings/", include("apps.accounts.urls", namespace="settings")),
-    path("markdownx/", include(markdownx)),
+    # summernote
+    path("summernote/", include("django_summernote.urls")),
 ]
 
 if settings.DEBUG:
@@ -53,3 +53,8 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+
+    from django.conf.urls.static import static
+
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    

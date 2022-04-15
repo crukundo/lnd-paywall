@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, ListView, UpdateView, DetailView, View
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -41,29 +42,35 @@ class ArticleCreatorView(View):
         messages.success(self.request, self.message)
         return reverse("articles:edit_article", args=self.pk)
 
-
+@login_required()
 def create_new_article(request):
     article = Article.objects.create(user=request.user)
     article.save()
     return redirect(reverse("articles:publish_article", kwargs={'article_uuid': article.uuid}))
 
-
+@login_required()
 def publish_new_article(request, article_uuid):
     article = get_object_or_404(Article, uuid=article_uuid)
 
     if request.method == "POST":
-        article_form = ArticleForm(request.POST, instance=article)
-        if article_form.is_valid():
-            article_form.save()
+        form = ArticleForm(request.POST, instance=article)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.status = Article.PUBLISHED
+            article.save()
+            messages.success(request, "Article: '{}' has been published successfully".format(article.title))
+            
+            return redirect(reverse("articles:list"))
 
     else:
-        article_form = ArticleForm(instance=article)
+        form = ArticleForm(instance=article)
     
     return render(request, "blog/publish_article.html", {
         'article': article,
-        'form': article_form
+        'form': form
     })
 
+@login_required()
 def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()

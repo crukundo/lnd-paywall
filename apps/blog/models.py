@@ -45,7 +45,7 @@ class Article(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=255, null=True, unique=True)
     status = models.CharField(max_length=1, choices=STATUS, default=DRAFT)
-    content = MarkdownxField()
+    content = models.CharField(_("Content"), max_length=10000, blank=True)
     edited = models.BooleanField(default=False)
     objects = ArticleQuerySet.as_manager()
 
