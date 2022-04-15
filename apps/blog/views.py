@@ -55,6 +55,7 @@ def publish_new_article(request, article_uuid):
     if request.method == "POST":
         form = ArticleForm(request.POST, instance=article)
         if form.is_valid():
+            print('valid')
             article = form.save(commit=False)
             article.status = Article.PUBLISHED
             article.save()

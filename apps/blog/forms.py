@@ -18,7 +18,7 @@ class ArticleForm(forms.ModelForm):
     )
     content = forms.CharField(
         widget=SummernoteInplaceWidget(attrs={"summernote": {"width": "100%", "height": "350px"}}),
-        max_length=500,
+        max_length=10000,
         help_text="Think about how to use images, subheadings, testimonials and the length of your main content",
         required=False,
     )
@@ -29,8 +29,10 @@ class ArticleForm(forms.ModelForm):
         self.helper.layout = Layout(
             "title",
             "content",
+            "status",
+            "edited",
             ButtonHolder(
-                Submit("submit", "Publish", css_class="btn btn-lg btn-primary mr-2"),
+                Submit("submit", "Publish", css_class="publish btn btn-lg btn-primary mr-2"),
                 HTML(
                     """
                     <button type="button" class="btn btn-lg btn-subtle-primary draft mr-2">Save as draft</button>

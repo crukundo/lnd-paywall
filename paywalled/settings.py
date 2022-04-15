@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent
 SECRET_KEY = 'django-insecure-q(@ma%((*zkx*b-^)9c)acq0f=$r=m2t@!nx5ai5n0!pw7(h4#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = DJANGO_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_htmx',
     'django_summernote',
+    'debug_toolbar',
+    'django_extensions',
     'apps.authentication',
     'apps.accounts',
     'apps.core',
@@ -58,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django_htmx.middleware.HtmxMiddleware'
 ]
 
@@ -163,6 +166,11 @@ DEFAULT_FILE_STORAGE = "django.core.files.storage.FileSystemStorage"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+DEBUG_TOOLBAR_CONFIG = {
+    "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
+    "SHOW_TEMPLATE_CONTEXT": True,
+}
 
 # ==============================================================================
 # SUMMERNOTE

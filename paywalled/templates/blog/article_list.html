@@ -37,7 +37,8 @@
                                 <h4 class="list-group-item-title">
                                     <a href="{% url 'articles:article' article.uuid %}">{{ article.title|title }}</a>
                                 </h4>
-                                <p class="list-group-item-text">{% trans 'Posted' %} {{ article.timestamp|naturaltime }}
+                                <p class="list-group-item-text">{% trans 'Posted' %}
+                                    {{ article.date_published|naturaltime }}
                                     by
                                     {{ article.user.profile.get_screen_name|title }} </p>
                             </div>

@@ -42,7 +42,8 @@ class Article(models.Model):
         related_name="author",
         on_delete=models.SET_NULL,
     )
-    timestamp = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
+    date_published = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255, null=True, unique=True)
     status = models.CharField(max_length=1, choices=STATUS, default=DRAFT)
     content = models.CharField(_("Content"), max_length=10000, blank=True)
@@ -52,7 +53,7 @@ class Article(models.Model):
     class Meta:
         verbose_name = _("Article")
         verbose_name_plural = _("Articles")
-        ordering = ("-timestamp",)
+        ordering = ("-date_published",)
 
     def __str__(self):
         return self.title

@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from django.views.generic import RedirectView, TemplateView
-
+from django.conf.urls.static import static
 from django.conf import settings
 from django.apps import apps
 from apps.authentication import views as auth_views
@@ -27,7 +27,7 @@ urlpatterns = [
     path("settings/", include("apps.accounts.urls", namespace="settings")),
     # summernote
     path("summernote/", include("django_summernote.urls")),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development
@@ -52,9 +52,4 @@ if settings.DEBUG:
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
-        urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
-
-
-    from django.conf.urls.static import static
-
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)    
+        urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns 
