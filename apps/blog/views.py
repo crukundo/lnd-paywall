@@ -11,6 +11,13 @@ from apps.authentication.helpers import AuthorRequiredMixin
 from apps.blog.models import Article
 from apps.blog.forms import ArticleForm
 
+@login_required()
+def user_published_articles(request):
+    articles = request.user.articles.filter(status="P")
+    context = {
+        "articles": articles
+    }
+    return render(request, "blog/user_article_list.html", context)
 
 @login_required()
 def list_drafts(request):
@@ -65,10 +72,8 @@ def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
     articles = Article.objects.all()
-    # return redirect(reverse("articles:list"))
-    return render(request, "blog/article_list.html", {
-        'articles': articles
-    })
+
+    return redirect(reverse("articles:list"))
 
 
 class CreateArticleView(LoginRequiredMixin, CreateView):

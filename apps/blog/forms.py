@@ -43,7 +43,7 @@ class ArticleForm(forms.ModelForm):
                 """
             ),
             ButtonHolder(
-                Submit("submit", "Save as draft", css_class="publish btn btn-lg btn-primary mr-2"),
+                Submit("submit", "Save as draft", css_class="publish btn btn-lg btn-subtle-success mr-2"),
                 HTML(
                     """
                     <a href="{% url 'articles:list' %}" class="btn btn-lg btn-subtle-dark">Cancel</a>

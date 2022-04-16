@@ -2,7 +2,7 @@
 {% load static i18n %}
 {% load humanize %}
 
-{% block title %} {% trans 'Your Drafts' %} {% endblock %}
+{% block title %} {% trans 'Your Articles' %} {% endblock %}
 
 {% block head %}
 
@@ -15,16 +15,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Drafts' %}</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
         </ol>
     </nav>
     <div class="row">
         <!-- Blog Entries Column -->
-        <div class="col-md-8 mx-auto">
+        <div class="col-md-8">
             <div class="list-group list-group-flush list-group-divider">
                 {% for article in articles %}
                 <!-- Blog Post -->
-                <div class="card mb-4" id="drafts">
+                <div class="card mb-4" id="articles">
                     <div class="card-body">
                         <div class="list-group-item">
                             <div class="list-group-item-figure">
@@ -42,17 +42,20 @@
                                     by
                                     {{ article.user.profile.get_screen_name|title }} </p>
                             </div>
+                            {% if request.user == article.user %}
                             <div class="list-group-item-figure">
-                                <a href="{% url 'articles:publish_article' article.uuid %}"
-                                    class="btn btn-sm btn-primary">Edit & Publish</a>
+                                <a href="{% url 'articles:edit_article' article.pk %}"
+                                    class="btn btn-sm btn-primary">Edit</a>
                                 <a class="btn btn-sm btn-light"
                                     href="{% url 'articles:delete_article' article.pk %}">Delete</a>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <p class="no-data">You have no drafts yet.</p>
+                <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
+                        href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a></h4>
                 {% endfor %}
             </div>
 
@@ -81,6 +84,14 @@
             </ul>
             {% endif %}
 
+        </div>
+
+        <div class="col-md-4">
+            <div class="card mb-4" id="articles">
+                <div class="card-body">
+                    <h6>Payments stream</h6>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.row -->

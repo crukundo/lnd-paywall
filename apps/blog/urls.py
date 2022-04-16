@@ -5,6 +5,7 @@ from requests import delete
 from apps.blog.views import (
     EditArticleView,
     DetailArticleView,
+    user_published_articles,
     list_drafts,
     list_articles,
     create_new_article,
@@ -15,6 +16,7 @@ from apps.blog.views import (
 app_name = "articles"
 urlpatterns = [
     path("", view=list_articles, name="list"),
+    path("published/", view=user_published_articles, name="user_articles"),
     path("new/", view=create_new_article, name="write_new"),
     path("publish/<uuid:article_uuid>/", view=publish_new_article, name="publish_article"),
     path("drafts/", view=list_drafts, name="drafts"),

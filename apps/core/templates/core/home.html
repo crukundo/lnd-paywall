@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static i18n humanize %}
 
 {% block content %}
 
@@ -17,9 +17,84 @@
     </div><!-- /.sticker -->
     <!-- .container -->
     <div class="container position-relative">
-        <h2 class="text-center text-sm-left"> Paywalled</h2>
-        <p class="lead text-muted text-center text-sm-left mb-5">Exploring the lightning network through micropayments.
-            Pay a tiny fee to publish, read, edit and comment on articles.</p>
+
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="col-md-10 mx-auto">
+                <h2 class="text-center text-sm-left"> Paywalled</h2>
+                <p class="lead text-muted text-center text-sm-left mb-5">Exploring the lightning network through
+                    micropayments.
+                    Pay a tiny fee to publish, read, edit and comment on articles.</p>
+
+
+                <div class="list-group list-group-flush list-group-divider">
+                    {% for article in articles %}
+                    <!-- Blog Post -->
+                    <div class="card mb-4" id="articles">
+                        <div class="card-body">
+                            <div class="list-group-item">
+                                <div class="list-group-item-figure">
+                                    <a href="{% url 'articles:article' article.uuid %}"
+                                        class="tile tile-lg tile-circle bg-success">
+                                        <i class="fas fa-bolt fa-fw"></i>
+                                    </a>
+                                </div>
+                                <div class="list-group-item-body">
+                                    <h4 class="list-group-item-title">
+                                        <a
+                                            href="{% url 'articles:article' article.uuid %}">{{ article.title|title }}</a>
+                                    </h4>
+                                    <p class="list-group-item-text">{% trans 'Posted' %}
+                                        {{ article.date_published|naturaltime }}
+                                        by
+                                        {{ article.user.profile.get_screen_name|title }} </p>
+                                </div>
+                                {% if request.user == article.user %}
+                                <div class="list-group-item-figure">
+                                    <a href="{% url 'articles:edit_article' article.pk %}"
+                                        class="btn btn-sm btn-primary">Edit</a>
+                                    <a class="btn btn-sm btn-light"
+                                        href="{% url 'articles:delete_article' article.pk %}">Delete</a>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
+                            href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a>
+                    </h4>
+                    {% endfor %}
+                </div>
+
+                {% if is_paginated %}
+                <ul class="pagination justify-content-center mb-4">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&larr;
+                            {% trans 'Newer' %}</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#"><span>&larr;</span></a></li>
+                    {% endif %}
+                    {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                    <li class="page-item disabled"><a class="page-link" href="#">{{ i }} <span
+                                class="sr-only">(current)</span></a></li>
+                    {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link"
+                            href="?page={{ page_obj.next_page_number }}">{% trans 'Older' %} &rarr;</a></li>
+                    {% else %}
+                    <li class="page-item disabled"><a class="page-link" href="#"><span>&rarr;</span></a></li>
+                    {% endif %}
+                </ul>
+                {% endif %}
+
+            </div>
+        </div>
+        <!-- /.row -->
 
     </div><!-- /.container -->
 </section>

@@ -7,15 +7,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 def home(request):
-    if request.user.is_authenticated:
-        user_blogs = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published")
-        latest_blog = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published").first()
-        return render(
-            request,
-            "core/home.html",
-            {"user_blogs": user_blogs, "latest_blog": latest_blog},
-        )
-    return render(request, "core/cover.html")
+    published_articles = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published")
+    return render(
+        request,
+        "core/home.html",
+        {"articles": published_articles},
+    )
 
 
 class LoginRedirectView(LoginRequiredMixin, RedirectView):
