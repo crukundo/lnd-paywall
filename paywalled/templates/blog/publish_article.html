@@ -19,20 +19,6 @@
     {% crispy form %}
 </form>
 
-<div id="publishInvoice" class="mt-3">
-    {% for payment in article.payments.all %}
-    {% include 'partials/partial_invoice.html' %}
-    {% endfor %}
-</div>
-
-<!-- Generates invoice on click -->
-<button id="basic-button" class="btn btn-lg btn-warning"
-    hx-get="{% url 'payments:generate_pub_invoice' article.uuid %}">
-    Generate invoice
-</button>
-<!-- end generate invoice -->
-
-
 {% endblock content %}
 
 {% block modal %}

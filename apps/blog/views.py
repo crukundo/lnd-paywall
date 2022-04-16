@@ -43,13 +43,16 @@ def publish_new_article(request, article_uuid):
         if form.is_valid():
             print('valid')
             article = form.save(commit=False)
-            article.status = Article.PUBLISHED
+            article.status = Article.DRAFT
             article.save()
-            messages.success(request, "Article: '{}' has been published successfully".format(article.title))
+            messages.success(request, "Draft: '{}' has been saved successfully".format(article.title))
             return redirect(reverse("articles:list"))
 
     else:
         form = ArticleForm(instance=article)
+
+    # find a way to check if article has any paid payments, at which point, 
+    # we introduce a new form with submit button that marks article published 
     
     return render(request, "blog/publish_article.html", {
         'article': article,

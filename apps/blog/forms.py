@@ -19,7 +19,7 @@ class ArticleForm(forms.ModelForm):
     content = forms.CharField(
         widget=SummernoteInplaceWidget(attrs={"summernote": {"width": "100%", "height": "350px"}}),
         max_length=10000,
-        help_text="Think about how to use images, subheadings, testimonials and the length of your main content",
+        help_text="max 10000 characters",
         required=False,
     )
 
@@ -31,11 +31,22 @@ class ArticleForm(forms.ModelForm):
             "content",
             "status",
             "edited",
+            HTML(
+                """
+                {% if article.payments.all %}
+                <div id="publishInvoice" class="mt-3">
+                    {% for payment in article.payments.all %}
+                    {% include 'partials/partial_pub_invoice.html' %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                """
+            ),
             ButtonHolder(
-                Submit("submit", "Publish article: $0.50", css_class="publish btn btn-lg btn-primary mr-2"),
+                Submit("submit", "Save as draft", css_class="publish btn btn-lg btn-primary mr-2"),
                 HTML(
                     """
-                    <a href="{% url 'articles:list' %}" class="btn btn-lg btn-default">Cancel</a>
+                    <a href="{% url 'articles:list' %}" class="btn btn-lg btn-subtle-dark">Cancel</a>
                     """
                 )
                 ),
