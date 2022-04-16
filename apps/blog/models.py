@@ -39,7 +39,7 @@ class Article(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
-        related_name="author",
+        related_name="articles",
         on_delete=models.SET_NULL,
     )
     date_created = models.DateTimeField(auto_now_add=True)
@@ -58,17 +58,10 @@ class Article(models.Model):
     def __str__(self):
         return self.title
 
-    def get_markdown(self):
-        return markdownify(self.content)
-
     def get_absolute_url(self): 
         return reverse('article', kwargs=[str(self.uuid)])
 
     def generate_pub_invoice(self):
-        """
-        Generates a new invoice for publishing
-        """
-        assert self.status == 'pending_invoice', "Already generated invoice"
 
         add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_VIEW_AMOUNT, memo=self.title)
         r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
@@ -76,5 +69,5 @@ class Article(models.Model):
         payment_request = add_invoice_resp.payment_request
 
         from apps.payments.models import Payment
-        payment = Payment.objects.create(user=self.request.user, article=self.pk, purpose=Payment.PUBLISH, satoshi_amount=settings.MIN_PUBLISH_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
+        payment = Payment.objects.create(user=self.user, article=self, purpose=Payment.PUBLISH, satoshi_amount=settings.MIN_PUBLISH_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
         payment.save()

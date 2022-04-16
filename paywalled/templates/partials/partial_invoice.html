@@ -1,1 +1,61 @@
-<p class="text-danger">{{ payment.payment_request }}</p>
+{% load static %}
+
+<style>
+    .clickable {
+        cursor: pointer !important;
+    }
+</style>
+
+<form id="pub-lndInvoice">
+    <fieldset>
+        <div class="form-group">
+            <label for="lndInvoice">Pay with lightning</label>
+            <div class="input-group input-group-lg">
+                <label class="input-group-prepend" for="lndInvoice">
+                    <span class="badge"><i class="bi bi-lightning-charge-fill"></i></span>
+                </label>
+                <input type="text" class="form-control form-control-lg" id="pubLndInvoice"
+                    value="{{ payment.payment_request }}" readonly>
+                <div class="input-group-append">
+                    <span class="badge clickable" id="openWallet"><a href="lightning:{{ payment.payment_request }}"><i
+                                class="bi bi-subtract"></i> Open
+                            wallet</a></span>
+                    <span class="badge clickable" id="copyInvoice"><i class="bi bi-subtract"></i> Copy</span>
+                    <span class="badge clickable" id="showQRCode"><i class="bi bi-qr-code-scan"></i> Show QR</span>
+                    <span class="badge clickable" id="checkPayment"><i class="bi bi-arrow-repeat"></i> Check
+                        payment</span>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</form>
+<!-- QR Code card -->
+<div class="card text-black bg-warning" id="qrCodeCard">
+    <div class="card-header"> Scan QR Code </div>
+    <div class="card-body" id="qr-code"></div>
+</div>
+<!-- end QR Code card -->
+
+{% block javascript %}
+<script src="{% static 'js/copy.js' %}"></script>
+<script src="{% static 'js/kjua.min.js' %}"></script>
+<script>
+    // copy lnd invoice to clipboard on click
+    createCopy('{{ payment.payment_request }}', 'copyInvoice', function () {
+        alert('Lightning invoice was copied to clipboard');
+    });
+
+    // generate QR code with kjua
+    $('#qr-code').kjua({
+        text: 'lightning:{{ payment.payment_request }}'
+    });
+
+    let qrCode = $("#qrCodeCard");
+    // keep the code hidden until
+    qrCode.hide()
+
+    $("#showQRCode").on("click", function () {
+        qrCode.toggle("fast")
+    })
+</script>
+{% endblock %}

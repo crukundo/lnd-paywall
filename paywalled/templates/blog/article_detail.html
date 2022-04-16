@@ -20,16 +20,12 @@
             <!-- Title -->
             <h1 class="mt-4">{{ article.title|title }}</h1>
             <!-- Author -->
-            <p class="lead">{% trans 'by' %}
-                <a href="#">{{ article.user.profile.get_screen_name |title }}</a>
+            <p class="lead">Published {{ article.date_published|naturaltime }} by <a
+                    href="#">{{ article.user.profile.get_screen_name |title }}</a>
             </p>
             <hr>
-            <!-- Date/Time -->
-            <p>{% trans 'Posted' %} {{ article.timestamp|naturaltime }} </p>
-            <hr>
-            <hr>
             <!-- Post Content -->
-            <p class="card-text">{{ article.get_markdown|safe }}</p>
+            <p class="card-text">{{ article.content|safe }}</p>
             <hr>
         </div>
 

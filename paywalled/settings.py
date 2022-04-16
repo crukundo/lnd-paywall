@@ -9,11 +9,14 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import os
 
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
+
+LND_DIR = os.path.join(os.path.join(os.environ['HOME']), 'lnd')
 
 
 # Quick-start development settings - unsuitable for production
@@ -205,7 +208,7 @@ SUMMERNOTE_CONFIG = {
 MIN_VIEW_AMOUNT = 1000
 MIN_PUBLISH_AMOUNT = 2000
 
-LND_FOLDER = '/Users/collin/lnd'
-LND_MACAROON_FILE = '/Users/collin/lnd/lndrpc/admin.macaroon'
-LND_TLS_CERT_FILE = '/Users/collin/lnd/lndrpc/tls.cert'
+LND_FOLDER = LND_DIR
+LND_MACAROON_FILE = os.path.join(LND_DIR, "lndrpc", "admin.macaroon")
+LND_TLS_CERT_FILE = os.path.join(LND_DIR, "lndrpc", "tls.cert")
 LND_NETWORK = 'regtest'

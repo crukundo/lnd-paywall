@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.views.generic import CreateView, ListView, UpdateView, DetailView, View
 from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -11,36 +12,21 @@ from apps.blog.models import Article
 from apps.blog.forms import ArticleForm
 
 
-class ArticlesListView(LoginRequiredMixin, ListView):
-    """Basic ListView implementation to call the published articles list."""
+@login_required()
+def list_drafts(request):
+    drafts = request.user.articles.filter(status="D")
+    context = {
+        "articles": drafts
+    }
+    return render(request, "blog/draft_list.html", context)
 
-    model = Article
-    paginate_by = 15
-    context_object_name = "articles"
-
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        return context
-
-    def get_queryset(self, **kwargs):
-        return Article.objects.get_published()
-
-
-class DraftsListView(ArticlesListView):
-    """Overriding the original implementation to call the drafts articles
-    list."""
-
-    def get_queryset(self, **kwargs):
-        return Article.objects.get_drafts()
-
-# Article Prelease
-class ArticleCreatorView(View):
-    message = _("You have started a new article.")
-
-    def get(self, request, *args, **kwargs):
-        Article(user=request.user).save()
-        messages.success(self.request, self.message)
-        return reverse("articles:edit_article", args=self.pk)
+@login_required()
+def list_articles(request):
+    articles = Article.objects.get_published()
+    context = {
+        "articles": articles
+    }
+    return render(request, "blog/article_list.html", context)
 
 @login_required()
 def create_new_article(request):
@@ -60,7 +46,6 @@ def publish_new_article(request, article_uuid):
             article.status = Article.PUBLISHED
             article.save()
             messages.success(request, "Article: '{}' has been published successfully".format(article.title))
-            
             return redirect(reverse("articles:list"))
 
     else:
@@ -72,10 +57,15 @@ def publish_new_article(request, article_uuid):
     })
 
 @login_required()
+@require_http_methods(['DELETE'])
 def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
-    return redirect(reverse("articles:list"))
+    articles = Article.objects.all()
+    # return redirect(reverse("articles:list"))
+    return render(request, "blog/article_list.html", {
+        'articles': articles
+    })
 
 
 class CreateArticleView(LoginRequiredMixin, CreateView):

@@ -8,8 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 def home(request):
     if request.user.is_authenticated:
-        user_blogs = Article.objects.filter(status=Article.PUBLISHED).order_by("-timestamp")
-        latest_blog = Article.objects.filter(status=Article.PUBLISHED).order_by("-timestamp").first()
+        user_blogs = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published")
+        latest_blog = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published").first()
         return render(
             request,
             "core/home.html",

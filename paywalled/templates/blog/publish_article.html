@@ -14,16 +14,24 @@
         <li class="breadcrumb-item active" aria-current="page">{% trans 'Write a new article' %}</li>
     </ol>
 </nav>
-<form method="POST" action="">
+<form method="POST" action="" id="article-form">
     {% csrf_token %}
     {% crispy form %}
 </form>
 
-<div id="publishInvoice">
+<div id="publishInvoice" class="mt-3">
     {% for payment in article.payments.all %}
-    <p class="text-danger">{{ payment.payment_request }}</p>
+    {% include 'partials/partial_invoice.html' %}
     {% endfor %}
 </div>
+
+<!-- Generates invoice on click -->
+<button id="basic-button" class="btn btn-lg btn-warning"
+    hx-get="{% url 'payments:generate_pub_invoice' article.uuid %}">
+    Generate invoice
+</button>
+<!-- end generate invoice -->
+
 
 {% endblock content %}
 

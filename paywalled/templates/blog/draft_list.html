@@ -15,17 +15,17 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Drafts' %}</a></li>
         </ol>
     </nav>
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mx-auto">
             <div class="list-group list-group-flush list-group-divider"
-                hx-confirm="Are you sure you want to delete this article?" hx-target="#articles" hx-swap="none">
+                hx-confirm="Are you sure you want to delete this article?" hx-target="#drafts" hx-swap="outerHTML">
                 {% for article in articles %}
                 <!-- Blog Post -->
-                <div class="card mb-4" id="articles">
+                <div class="card mb-4" id="drafts">
                     <div class="card-body">
                         <div class="list-group-item">
                             <div class="list-group-item-figure">
@@ -43,20 +43,17 @@
                                     by
                                     {{ article.user.profile.get_screen_name|title }} </p>
                             </div>
-                            {% if request.user == article.user %}
                             <div class="list-group-item-figure">
-                                <a href="{% url 'articles:edit_article' article.pk %}"
-                                    class="btn btn-sm btn-primary">Edit</a>
+                                <a href="{% url 'articles:publish_article' article.uuid %}"
+                                    class="btn btn-sm btn-primary">Edit & Publish</a>
                                 <a class="btn btn-sm btn-light"
                                     hx-delete="{% url 'articles:delete_article' article.pk %}">Delete</a>
                             </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
                 {% empty %}
-                <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
-                        href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a></h4>
+                <p class="no-data">You have no drafts yet.</p>
                 {% endfor %}
             </div>
 
