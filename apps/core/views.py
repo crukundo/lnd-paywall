@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 def home(request):
-    published_articles = Article.objects.filter(status=Article.PUBLISHED).order_by("-date_published")
+    published_articles = Article.objects.get_published()
     return render(
         request,
         "core/home.html",

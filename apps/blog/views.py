@@ -12,14 +12,6 @@ from apps.blog.models import Article
 from apps.blog.forms import ArticleForm
 
 @login_required()
-def user_published_articles(request):
-    articles = request.user.articles.filter(status="P")
-    context = {
-        "articles": articles
-    }
-    return render(request, "blog/user_article_list.html", context)
-
-@login_required()
 def list_drafts(request):
     drafts = request.user.articles.filter(status="D")
     context = {
@@ -29,7 +21,7 @@ def list_drafts(request):
 
 @login_required()
 def list_articles(request):
-    articles = Article.objects.get_published()
+    articles = request.user.articles.filter(status="P")
     context = {
         "articles": articles
     }
@@ -39,6 +31,12 @@ def list_articles(request):
 def create_new_article(request):
     article = Article.objects.create(user=request.user)
     article.save()
+    # generate lighting invoice
+    try:
+        article.generate_pub_invoice()
+    except:
+        raise NotImplementedError()
+
     return redirect(reverse("articles:publish_article", kwargs={'article_uuid': article.uuid}))
 
 @login_required()

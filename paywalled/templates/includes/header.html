@@ -11,7 +11,7 @@
         <ul class="header-nav nav">
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="btn btn-link" href="{% url 'articles:user_articles' %}">My articles</a>
+            <a class="btn btn-link" href="{% url 'articles:list' %}">My articles</a>
           </li>
           <li class="nav-item">
             <a class="btn btn-link" href="{% url 'articles:drafts' %}">My drafts</a>

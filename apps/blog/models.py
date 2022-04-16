@@ -23,11 +23,11 @@ class ArticleQuerySet(models.query.QuerySet):
 
     def get_published(self):
         """Returns only the published items in the current queryset."""
-        return self.filter(status="P")
+        return self.filter(status="P").order_by("-date_published")
 
     def get_drafts(self):
         """Returns only the items marked as DRAFT in the current queryset."""
-        return self.filter(status="D")
+        return self.filter(status="D").order_by("-date_published")
 
 
 class Article(models.Model):
@@ -71,3 +71,6 @@ class Article(models.Model):
         from apps.payments.models import Payment
         payment = Payment.objects.create(user=self.user, article=self, purpose=Payment.PUBLISH, satoshi_amount=settings.MIN_PUBLISH_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
         payment.save()
+
+    def get_view_count(self):
+        return self.payments.filter(status="complete", purpose="view").count()
