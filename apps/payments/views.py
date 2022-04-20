@@ -3,14 +3,41 @@ from django.shortcuts import render, get_object_or_404
 from apps.blog.models import Article
 from django.views.decorators.http import require_http_methods, require_GET
 from django.http import HttpRequest, HttpResponse
+from django.conf import settings
+
+from apps.payments.models import Payment
+
+import codecs
+from lnd_grpc import lnd_grpc
+
+import lnd_grpc.protos.rpc_pb2 as ln
+
+lnrpc = lnd_grpc.Client(
+    lnd_dir = settings.LND_FOLDER,
+    macaroon_path = settings.LND_MACAROON_FILE,
+    tls_cert_path = settings.LND_TLS_CERT_FILE,
+    network = settings.LND_NETWORK,
+)
 
 
 # Create your views here.
 
-@require_GET
-def generate_pub_invoice(request: HttpRequest, uuid) -> HttpResponse:
-    article = get_object_or_404(Article, uuid=uuid)
-    # generate publishing invoice
-    invoice = article.generate_pub_invoice()
-    context = {'invoice': invoice }
-    return render(request, 'partials/partial_invoice.html', context)
+def check_payment(self, pk):
+    """
+    Checks if the Lightning payment has been received for this invoice
+    """
+    # get the payment in question
+    payment = Payment.objects.get(pk=pk)
+
+    r_hash_base64 = payment.r_hash.encode('utf-8')
+    r_hash_bytes = str(codecs.decode(r_hash_base64, 'base64'))
+    invoice_resp = lnrpc.lookup_invoice(r_hash=r_hash_bytes)
+
+    if invoice_resp.settled:
+        # Payment complete
+        payment.status = 'complete'
+        payment.save()
+        return HttpResponse("Invoice paid successfully")
+    else:
+        # Payment not received
+        return HttpResponse("Invoice pending payment")

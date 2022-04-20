@@ -5,6 +5,11 @@ from apps.blog.models import Article
 import codecs
 from lnd_grpc import lnd_grpc
 
+from django.http import HttpRequest, HttpResponse
+from django.conf import settings
+
+import lnd_grpc.protos.rpc_pb2 as ln
+
 lnrpc = lnd_grpc.Client(
     lnd_dir = settings.LND_FOLDER,
     macaroon_path = settings.LND_MACAROON_FILE,
@@ -51,35 +56,22 @@ class Payment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
 
-    def generate_invoice(self, user, article):
-        """
-        Generates a new invoice
-        """
-        assert self.status == 'pending_invoice', "Already generated invoice"
-
-        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_VIEW_AMOUNT, memo=article.title)
-        r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
-        self.r_hash = r_hash_base64.decode('utf-8')
-        self.payment_request = add_invoice_resp.payment_request
-        self.status = 'pending_payment'
-        self.save()
-
     def check_payment(self):
         """
         Checks if the Lightning payment has been received for this invoice
         """
-        if self.status == 'pending_invoice':
-            return False
+        # if self.status == 'pending_payment':
+        #     return False
 
         r_hash_base64 = self.r_hash.encode('utf-8')
         r_hash_bytes = str(codecs.decode(r_hash_base64, 'base64'))
-        invoice_resp = lnrpc.lookup_invoice(r_hash=r_hash_bytes)
+        invoice_resp = lnrpc.lookup_invoice(ln.PaymentHash(r_hash=r_hash_bytes))
 
         if invoice_resp.settled:
             # Payment complete
             self.status = 'complete'
             self.save()
-            return True
+            return HttpResponse("Invoice paid successfully")
         else:
             # Payment not received
-            return False
+            return HttpResponse("Invoice pending payment")

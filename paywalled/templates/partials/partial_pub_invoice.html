@@ -22,10 +22,13 @@
                             wallet</a></span>
                     <span class="badge clickable" id="copyInvoice"><i class="bi bi-subtract"></i> Copy</span>
                     <span class="badge clickable" id="showQRCode"><i class="bi bi-qr-code-scan"></i> Show QR</span>
-                    <span class="badge clickable" id="checkPayment"><i class="bi bi-arrow-repeat"></i> Check
+                    <span class="badge clickable" id="checkPayment" hx-post="/payments/check_payment/{{ payment.pk }}/"
+                        hx-trigger="click" hx-target="#invoice-status" hx-swap="innerhtml"><i
+                            class="bi bi-arrow-repeat"></i> Check
                         payment</span>
                 </div>
             </div>
+            <div style="font-weight:400" id="invoice-status"></div>
         </div>
     </fieldset>
 </form>
