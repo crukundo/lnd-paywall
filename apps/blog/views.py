@@ -49,7 +49,7 @@ def publish_new_article(request, article_uuid):
 
     # check if there's a logged payment
     try:
-        payment = article.payments.filter(status='complete').first()
+        payment = article.payments.filter(purpose='publish', status='complete').first()
         if payment:
             payment_made = True
 
@@ -128,12 +128,30 @@ class EditArticleView(LoginRequiredMixin, AuthorRequiredMixin, UpdateView):
         return reverse("articles:list")
 
 
-class DetailArticleView(LoginRequiredMixin, DetailView):
-    """Basic DetailView implementation to call an individual article."""
+@login_required()
+def article_detail(request, article_uuid):
+    article = Article.objects.get(uuid=article_uuid)
+    # assume the worst first, lol
+    payment_made = False
 
-    model = Article
+    # generate lighting invoice to view article
+    try:
+        # check existence of 'to view' payments for this article and this user
+        payments = article.payments.filter(purpose='view', user=request.user)
+        if payments:
+            # we just need THE one
+            payment = payments.first()
+            if payment.status == 'complete':
+                payment_made = True
+        else:
+            # if no existing payment objects to view this article by this user
+            article.generate_view_invoice()
+    except:
+        raise NotImplementedError()
 
-    def get_object(self, queryset=None):
-        return Article.objects.get(uuid=self.kwargs.get("uuid"))
+    return render(request, "blog/article_detail.html", {
+        'article': article,
+        'payment_made': payment_made
+    })
 
 # @todo: on edit, check if lightning publish invoice has expired and create a new one. Also mark payment as expired

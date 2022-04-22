@@ -18,8 +18,6 @@ class ArticleForm(forms.ModelForm):
     )
     content = forms.CharField(
         widget=SummernoteInplaceWidget(attrs={"summernote": {"width": "100%", "height": "350px"}}),
-        max_length=10000,
-        help_text="max 10000 characters",
         required=False,
     )
 
@@ -38,7 +36,7 @@ class ArticleForm(forms.ModelForm):
                 {% else %}
                 <div id="publishInvoice" class="mt-3">
                     {% for payment in article.payments.all %}
-                    {% include 'partials/partial_pub_invoice.html' %}
+                    {% include 'partials/partial_invoice.html' %}
                     {% endfor %}
                 </div>
                 {% endif %}

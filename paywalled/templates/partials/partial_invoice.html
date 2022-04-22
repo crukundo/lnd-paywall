@@ -9,7 +9,11 @@
 <form id="pub-lndInvoice">
     <fieldset>
         <div class="form-group">
+            {% if payment.purpose == 'publish' %}
             <label style="font-weight:600" for="lndInvoice">Pay $0.85 (2,100 sats) to publish</label>
+            {% elif payment.purpose == 'view' %}
+            <label style="font-weight:600" for="lndInvoice">Pay $0.6 (1,500 sats) to view</label>
+            {% endif %}
             <div class="input-group input-group-lg">
                 <label class="input-group-prepend" for="lndInvoice">
                     <span class="badge"><i class="bi bi-lightning-charge-fill"></i></span>
@@ -22,13 +26,10 @@
                             wallet</a></span>
                     <span class="badge clickable" id="copyInvoice"><i class="bi bi-subtract"></i> Copy</span>
                     <span class="badge clickable" id="showQRCode"><i class="bi bi-qr-code-scan"></i> Show QR</span>
-                    <span class="badge clickable" id="checkPayment" hx-get="/payments/check_payment/{{ payment.pk }}/"
-                        hx-trigger="click, every 10s" hx-target="#invoice-status" hx-swap="innerhtml"><i
-                            class="bi bi-arrow-repeat"></i> Check
-                        payment</span>
                 </div>
             </div>
-            <div id="invoice-status">Checking for payment...</div>
+            <div id="invoice-status" hx-get="/payments/check_payment/{{ payment.pk }}/" hx-trigger="every 10s"
+                hx-target="#invoice-status" hx-swap="innerhtml">Checking for payment...</div>
         </div>
     </fieldset>
 </form>

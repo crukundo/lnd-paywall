@@ -46,7 +46,7 @@ class Article(models.Model):
     date_published = models.DateTimeField(auto_now=True)
     title = models.CharField(max_length=255, null=True, unique=True)
     status = models.CharField(max_length=1, choices=STATUS, default=DRAFT)
-    content = models.CharField(_("Content"), max_length=10000, blank=True)
+    content = models.CharField(_("Content"), max_length=40000, blank=True)
     edited = models.BooleanField(default=False)
     objects = ArticleQuerySet.as_manager()
 
@@ -63,13 +63,24 @@ class Article(models.Model):
 
     def generate_pub_invoice(self):
 
-        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_PUBLISH_AMOUNT, memo="Payment to Paywalled to publish article", expiry=604800)
+        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_PUBLISH_AMOUNT, memo="Payment to Paywalled to publish article", expiry=settings.PUBLISH_INVOICE_EXPIRY)
         r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
         r_hash = r_hash_base64.decode('utf-8')
         payment_request = add_invoice_resp.payment_request
 
         from apps.payments.models import Payment
         payment = Payment.objects.create(user=self.user, article=self, purpose=Payment.PUBLISH, satoshi_amount=settings.MIN_PUBLISH_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
+        payment.save()
+
+    def generate_view_invoice(self):
+
+        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_VIEW_AMOUNT, memo=f"Payment to Paywalled to view article: {self.title}.", expiry=settings.VIEW_INVOICE_EXPIRY)
+        r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
+        r_hash = r_hash_base64.decode('utf-8')
+        payment_request = add_invoice_resp.payment_request
+
+        from apps.payments.models import Payment
+        payment = Payment.objects.create(user=self.user, article=self, purpose=Payment.VIEW, satoshi_amount=settings.MIN_VIEW_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
         payment.save()
 
     def get_view_count(self):

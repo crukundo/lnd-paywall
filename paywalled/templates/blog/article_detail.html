@@ -20,13 +20,23 @@
             <!-- Title -->
             <h1 class="mt-4">{{ article.title|title }}</h1>
             <!-- Author -->
-            <p class="lead">Published {{ article.date_published|naturaltime }} by <a
+            <p>Published {{ article.date_published|naturaltime }} by <a
                     href="#">{{ article.user.profile.get_screen_name |title }}</a>
             </p>
             <hr>
             <!-- Post Content -->
             <p class="card-text">{{ article.content|safe }}</p>
             <hr>
+            {% if payment_made %}
+            <div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank
+                you</div>
+            {% else %}
+            <div id="publishInvoice" class="mt-3">
+                {% for payment in article.payments.all %}
+                {% include 'partials/partial_invoice.html' %}
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
 
         <!-- Sidebar Widgets Column -->
@@ -36,12 +46,9 @@
             {% if request.user.is_authenticated %}
             <div class="card my-4">
                 <div class="card-body text-center">
-                    <a class="btn btn-success" href="{% url 'articles:write_new' %}"
-                        title="{% trans 'Write a new article' %}"><i class="fa fa-pencil" aria-hidden="true"></i>
-                        {% trans 'New Article' %}</a>
                     <a class="btn btn-primary" href="{% url 'articles:edit_article' article.id %}"
                         title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        {% trans 'Edit' %}</a>
+                        {% trans 'Edit this article' %}</a>
                 </div>
             </div>
             {% endif %}

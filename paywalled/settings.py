@@ -205,9 +205,11 @@ SUMMERNOTE_CONFIG = {
     },
 }
 
-# LND SETTINGS
+# PAYWALL SETTINGS
 MIN_VIEW_AMOUNT = 1500
 MIN_PUBLISH_AMOUNT = 2100
+PUBLISH_INVOICE_EXPIRY = 604800 # 7 days
+VIEW_INVOICE_EXPIRY = 10800 # 3 hours
 
 LND_FOLDER = LND_DIR
 LND_MACAROON_FILE = os.path.join(LND_DIR, "data", "chain", "bitcoin", "regtest", "admin.macaroon")
