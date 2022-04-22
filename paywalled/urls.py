@@ -25,8 +25,7 @@ urlpatterns = [
     path("sitemap.xml", sitemap, name="sitemap"),
     path("robots.txt", TemplateView.as_view(template_name="robots.txt", content_type="text/plain")),
     path("settings/", include("apps.accounts.urls", namespace="settings")),
-    # summernote
-    path("summernote/", include("django_summernote.urls")),
+    path('tinymce/', include('tinymce.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:

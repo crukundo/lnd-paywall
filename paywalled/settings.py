@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'compressor',
     'crispy_forms',
     'django_htmx',
-    'django_summernote',
+    'tinymce',
     'debug_toolbar',
     'django_extensions',
     'apps.authentication',
@@ -177,33 +177,15 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 # ==============================================================================
-# SUMMERNOTE
+# TINYMCE
 # ==============================================================================
 
-SUMMERNOTE_THEME = 'bs4'  # Show summernote with Bootstrap4
+TINYMCE_COMPRESSOR=True
 
-SUMMERNOTE_CONFIG = {
-    "iframe": False,
-    "summernote": {
-        # As an example, using Summernote Air-mode
-        "airMode": False,
-        # Change editor size
-        "width": "100%",
-        "height": "480",
-        # Use proper language setting automatically (default)
-        "lang": None,
-        # Toolbar customization
-        # https://summernote.org/deep-dive/#custom-toolbar-popover
-        "toolbar": [
-            ["style", ["style"]],
-            ["font", ["bold", "underline", "clear"]],
-            ["color", ["color"]],
-            ["para", ["ul", "ol", "paragraph"]],
-            ["table", ["table"]],
-            ["insert", ["link", "picture", "video"]],
-        ],
-    },
+TINYMCE_DEFAULT_CONFIG = {
+    
 }
+
 
 # PAYWALL SETTINGS
 MIN_VIEW_AMOUNT = 1500

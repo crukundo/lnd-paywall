@@ -1,7 +1,7 @@
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Row, Column, ButtonHolder, Submit, HTML, Field, Button
-from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
+from tinymce.widgets import TinyMCE
 from apps.blog.models import Article
 
 
@@ -17,7 +17,7 @@ class ArticleForm(forms.ModelForm):
         label="Title of your masterpiece",
     )
     content = forms.CharField(
-        widget=SummernoteInplaceWidget(attrs={"summernote": {"width": "100%", "height": "350px"}}),
+        widget=TinyMCE(attrs={'cols': 80, 'rows': 30}),
         required=False,
     )
 
