@@ -39,9 +39,9 @@ def check_payment(request, pk):
             # Payment complete
             payment.status = 'complete'
             payment.save()
-            return HttpResponse("<div class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
+            return HttpResponse("<div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
         else:
             # Payment not received
-            return HttpResponse("<div class='alert alert-warning' role='alert'>Invoice payment is still pending. Will check again in 10s</div>")
+            return HttpResponse("<div id='paymentStatus' data-status='pending' class='alert alert-warning' role='alert'>Invoice payment is still pending. Will check again in 10s</div>")
 
         

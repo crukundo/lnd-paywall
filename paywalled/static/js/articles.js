@@ -15,4 +15,5 @@ $(function () {
         $("input[name='status']").val("D");
         $("#article-form").submit();
     });
+
 });

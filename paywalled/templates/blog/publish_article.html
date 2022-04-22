@@ -22,6 +22,23 @@
 
 {% endblock content %}
 
-{% block modal %}
+{% block javascript %}
 <script src="{% static 'js/articles.js' %}"></script>
-{% endblock modal %}
+
+<script>
+    // publish button initially disabled
+    $('.publish').prop('disabled', true);
+    // set a delay to allow the hx-trigger to run first
+    var delay = 12000;
+    setTimeout(function () {
+        // check the data-status attribute on the alert div in the invoice-status area
+        let paymentStatus = $('#paymentStatus').data("status");
+
+        if (paymentStatus === "paid") {
+            // enable publish button
+            $('.publish').removeAttr('disabled');
+            console.log('Payment status', paymentStatus);
+        }
+    }, delay);
+</script>
+{% endblock javascript %}

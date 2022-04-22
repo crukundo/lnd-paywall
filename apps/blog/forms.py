@@ -34,7 +34,7 @@ class ArticleForm(forms.ModelForm):
             HTML(
                 """
                 {% if payment_made %}
-                <div class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>
+                <div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>
                 {% else %}
                 <div id="publishInvoice" class="mt-3">
                     {% for payment in article.payments.all %}
