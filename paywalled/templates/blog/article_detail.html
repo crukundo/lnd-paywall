@@ -5,6 +5,27 @@
 {% block title %}{{ article.title|title }}{% endblock %}
 
 {% block content %}
+
+<style>
+    .article-content {
+        max-height: 400px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .article-content .continue-reading {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 30px 0;
+
+        /* "transparent" only works here because == rgba(0,0,0,0) */
+        background-image: linear-gradient(to bottom, transparent, gray);
+    }
+</style>
 <!-- Page Content -->
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -25,7 +46,12 @@
             </p>
             <hr>
             <!-- Post Content -->
-            <p class="card-text">{{ article.content|safe }}</p>
+            <div class="article-content">
+                {{ article.content|safe }}
+                <div class="continue-reading">
+                    <div class='alert alert-info mx-5' role='alert'>Pay the invoice below to keep reading</div>
+                </div>
+            </div>
             <hr>
             {% if payment_made %}
             <div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank
@@ -58,3 +84,47 @@
 </div>
 <!-- /.container -->
 {% endblock content %}
+
+{% block javascript %}
+<script>
+    // set a delay to allow the hx-trigger to run first
+    var delay = 12000;
+    setTimeout(function () {
+        // check the data-status attribute on the alert div in the invoice-status area
+        let paymentStatus = $('#paymentStatus').data("status");
+
+        if (paymentStatus === "paid") {
+
+            var $el, $outerdiv, $nextdiv, divs, totalHeight;
+
+            totalHeight = 0
+            $el = $('.continue-reading');
+            $outerdiv = $el.parent();
+            $nextdiv = $el.children();
+            $divs = $nextdiv.children();
+
+            // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
+            $divs.each(function () {
+                totalHeight += $(el).outerHeight();
+            });
+
+            $nextdiv
+                .css({
+                    // Set height to prevent instant jumpdown when max height is removed
+                    "height": $nextdiv.height(),
+                    "max-height": 9999
+                })
+                .animate({
+                    "height": totalHeight
+                });
+
+            // fade out continue reading
+            $el.fadeOut();
+
+            // prevent jump-down
+            return false;
+            console.log('Payment status', paymentStatus);
+        }
+    }, delay);
+</script>
+{% endblock javascript %}

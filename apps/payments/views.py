@@ -4,6 +4,7 @@ from apps.blog.models import Article
 from django.views.decorators.http import require_http_methods, require_GET
 from django.http import HttpRequest, HttpResponse
 from django.conf import settings
+from django_htmx.http import HttpResponseStopPolling
 
 from apps.payments.models import Payment
 
@@ -39,7 +40,7 @@ def check_payment(request, pk):
             # Payment complete
             payment.status = 'complete'
             payment.save()
-            return HttpResponse("<div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
+            return HttpResponseStopPolling("<div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
         else:
             # Payment not received
             return HttpResponse("<div id='paymentStatus' data-status='pending' class='alert alert-warning' role='alert'>Invoice payment is still pending. Will check again in 10s</div>")
