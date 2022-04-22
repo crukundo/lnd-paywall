@@ -22,7 +22,7 @@
         <!-- Blog Entries Column -->
         <div class="col-md-8 mx-auto">
             <div class="list-group list-group-flush list-group-divider">
-                {% for article in articles %}
+                {% for article in drafts %}
                 <!-- Blog Post -->
                 <div class="card mb-4" id="drafts">
                     <div class="card-body">
@@ -46,7 +46,7 @@
                                 <a href="{% url 'articles:publish_article' article.uuid %}"
                                     class="btn btn-sm btn-primary">Edit & Publish</a>
                                 <a class="btn btn-sm btn-light"
-                                    href="{% url 'articles:delete_article' article.pk %}">Delete</a>
+                                    href="{% url 'articles:delete_draft' article.pk %}">Delete</a>
                             </div>
                         </div>
                     </div>

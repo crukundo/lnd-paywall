@@ -18,17 +18,17 @@
                     value="{{ payment.payment_request }}" readonly>
                 <div class="input-group-append">
                     <span class="badge clickable" id="openWallet"><a href="lightning:{{ payment.payment_request }}"><i
-                                class="bi bi-subtract"></i> Open
+                                class="bi bi-wallet"></i> Open
                             wallet</a></span>
                     <span class="badge clickable" id="copyInvoice"><i class="bi bi-subtract"></i> Copy</span>
                     <span class="badge clickable" id="showQRCode"><i class="bi bi-qr-code-scan"></i> Show QR</span>
-                    <span class="badge clickable" id="checkPayment" hx-post="/payments/check_payment/{{ payment.pk }}/"
-                        hx-trigger="click" hx-target="#invoice-status" hx-swap="innerhtml"><i
+                    <span class="badge clickable" id="checkPayment" hx-get="/payments/check_payment/{{ payment.pk }}/"
+                        hx-trigger="click, every 10s" hx-target="#invoice-status" hx-swap="innerhtml"><i
                             class="bi bi-arrow-repeat"></i> Check
                         payment</span>
                 </div>
             </div>
-            <div style="font-weight:400" id="invoice-status"></div>
+            <div id="invoice-status">Checking for payment...</div>
         </div>
     </fieldset>
 </form>

@@ -22,7 +22,7 @@ lnrpc = lnd_grpc.Client(
 
 # Create your views here.
 
-def check_payment(self, pk):
+def check_payment(request, pk):
     """
     Checks if the Lightning payment has been received for this invoice
     """
@@ -30,14 +30,18 @@ def check_payment(self, pk):
     payment = Payment.objects.get(pk=pk)
 
     r_hash_base64 = payment.r_hash.encode('utf-8')
-    r_hash_bytes = str(codecs.decode(r_hash_base64, 'base64'))
+    r_hash_bytes = codecs.decode(r_hash_base64, 'base64')
     invoice_resp = lnrpc.lookup_invoice(r_hash=r_hash_bytes)
 
-    if invoice_resp.settled:
-        # Payment complete
-        payment.status = 'complete'
-        payment.save()
-        return HttpResponse("Invoice paid successfully")
-    else:
-        # Payment not received
-        return HttpResponse("Invoice pending payment")
+
+    if request.htmx:
+        if invoice_resp.settled:
+            # Payment complete
+            payment.status = 'complete'
+            payment.save()
+            return HttpResponse("<div class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
+        else:
+            # Payment not received
+            return HttpResponse("<div class='alert alert-warning' role='alert'>Invoice payment is still pending. Will check again in 10s</div>")
+
+        

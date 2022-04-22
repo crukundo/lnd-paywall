@@ -63,7 +63,7 @@ class Article(models.Model):
 
     def generate_pub_invoice(self):
 
-        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_VIEW_AMOUNT, memo=self.title)
+        add_invoice_resp = lnrpc.add_invoice(value=settings.MIN_PUBLISH_AMOUNT, memo="Payment to Paywalled to publish article", expiry=604800)
         r_hash_base64 = codecs.encode(add_invoice_resp.r_hash, 'base64')
         r_hash = r_hash_base64.decode('utf-8')
         payment_request = add_invoice_resp.payment_request

@@ -33,7 +33,9 @@ class ArticleForm(forms.ModelForm):
             "edited",
             HTML(
                 """
-                {% if article.payments.all %}
+                {% if payment_made %}
+                <div class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>
+                {% else %}
                 <div id="publishInvoice" class="mt-3">
                     {% for payment in article.payments.all %}
                     {% include 'partials/partial_pub_invoice.html' %}
@@ -43,7 +45,8 @@ class ArticleForm(forms.ModelForm):
                 """
             ),
             ButtonHolder(
-                Submit("submit", "Save as draft", css_class="publish btn btn-lg btn-subtle-success mr-2"),
+                Submit("publish", "Publish article", css_class="publish btn btn-lg btn-success mr-2"),
+                Submit("save", "Save as draft", css_class="draft btn btn-lg btn-subtle-primary mr-2"),
                 HTML(
                     """
                     <a href="{% url 'articles:list' %}" class="btn btn-lg btn-subtle-dark">Cancel</a>

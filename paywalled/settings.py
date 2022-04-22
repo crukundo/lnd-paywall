@@ -16,7 +16,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
 
-LND_DIR = os.path.join(os.path.join(os.environ['HOME']), 'lnd')
+LND_DIR = os.path.join(os.path.join(os.environ['HOME']), 'app-container', '.lnd')
 
 
 # Quick-start development settings - unsuitable for production
@@ -173,6 +173,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 DEBUG_TOOLBAR_CONFIG = {
     "DISABLE_PANELS": ["debug_toolbar.panels.redirects.RedirectsPanel"],
     "SHOW_TEMPLATE_CONTEXT": True,
+    "SHOW_TOOLBAR_CALLBACK" : lambda request: True,
 }
 
 # ==============================================================================
@@ -205,10 +206,10 @@ SUMMERNOTE_CONFIG = {
 }
 
 # LND SETTINGS
-MIN_VIEW_AMOUNT = 1000
-MIN_PUBLISH_AMOUNT = 1250
+MIN_VIEW_AMOUNT = 1500
+MIN_PUBLISH_AMOUNT = 2100
 
 LND_FOLDER = LND_DIR
-LND_MACAROON_FILE = os.path.join(LND_DIR, "lndrpc", "admin.macaroon")
-LND_TLS_CERT_FILE = os.path.join(LND_DIR, "lndrpc", "tls.cert")
+LND_MACAROON_FILE = os.path.join(LND_DIR, "data", "chain", "bitcoin", "regtest", "admin.macaroon")
+LND_TLS_CERT_FILE = os.path.join(LND_DIR, "tls.cert")
 LND_NETWORK = 'regtest'

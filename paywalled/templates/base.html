@@ -79,12 +79,6 @@
   </script>
   {% block javascript %}{% endblock %}
   <script src="{% static 'js/theme.min.js' %}"></script>
-  <script src="{% static 'js/bamby.js' %}"></script>
-  <script>
-    $(function () {
-      $.bamby.init();
-    });
-  </script>
   {% endcompress %}
 
   <script src="{% static 'js/htmx.min.js' %}" defer></script>

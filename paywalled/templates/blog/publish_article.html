@@ -14,6 +14,7 @@
         <li class="breadcrumb-item active" aria-current="page">{% trans 'Write a new article' %}</li>
     </ol>
 </nav>
+
 <form method="POST" action="" id="article-form">
     {% csrf_token %}
     {% crispy form %}

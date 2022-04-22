@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.generic import CreateView, ListView, UpdateView, DetailView, View
 from django.urls import reverse
@@ -15,7 +16,7 @@ from apps.blog.forms import ArticleForm
 def list_drafts(request):
     drafts = request.user.articles.filter(status="D")
     context = {
-        "articles": drafts
+        "drafts": drafts
     }
     return render(request, "blog/draft_list.html", context)
 
@@ -41,36 +42,55 @@ def create_new_article(request):
 
 @login_required()
 def publish_new_article(request, article_uuid):
-    article = get_object_or_404(Article, uuid=article_uuid)
+
+    article = request.user.articles.get(uuid=article_uuid)
+
+    payment_made = False
+
+    # check if there's a logged payment
+    try:
+        payment = article.payments.filter(status='complete').first()
+        if payment:
+            payment_made = True
+
+    except:
+            payment = None
 
     if request.method == "POST":
         form = ArticleForm(request.POST, instance=article)
+        # Publish article after payment
         if form.is_valid():
-            print('valid')
             article = form.save(commit=False)
-            article.status = Article.DRAFT
+            if "publish" in request.POST:
+                article.status = Article.PUBLISHED
+                messages.success(request, "Your article: '{}' has been published successfully".format(article.title))
+
+            elif "save" in request.POST:
+                article.status = Article.DRAFT
+                messages.success(request, "Draft: '{}' has been saved successfully".format(article.title))
             article.save()
-            messages.success(request, "Draft: '{}' has been saved successfully".format(article.title))
+
             return redirect(reverse("articles:list"))
 
     else:
         form = ArticleForm(instance=article)
-
-    # find a way to check if article has any paid payments, at which point, 
-    # we introduce a new form with submit button that marks article published 
     
     return render(request, "blog/publish_article.html", {
         'article': article,
-        'form': form
+        'form': form,
+        'payment_made': payment_made
     })
 
 @login_required()
-@require_http_methods(['DELETE'])
+def delete_draft_article(request, pk):
+    article = get_object_or_404(Article, pk=pk)
+    article.delete()
+    return redirect(reverse("articles:drafts"))
+
+@login_required()
 def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
-    articles = Article.objects.all()
-
     return redirect(reverse("articles:list"))
 
 
@@ -115,3 +135,5 @@ class DetailArticleView(LoginRequiredMixin, DetailView):
 
     def get_object(self, queryset=None):
         return Article.objects.get(uuid=self.kwargs.get("uuid"))
+
+# @todo: on edit, check if lightning publish invoice has expired and create a new one. Also mark payment as expired

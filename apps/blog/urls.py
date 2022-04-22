@@ -9,7 +9,8 @@ from apps.blog.views import (
     list_articles,
     create_new_article,
     publish_new_article,
-    delete_article
+    delete_article,
+    delete_draft_article
 )
 
 app_name = "articles"
@@ -20,5 +21,6 @@ urlpatterns = [
     path("drafts/", view=list_drafts, name="drafts"),
     path("edit/<int:pk>/", EditArticleView.as_view(), name="edit_article"),
     path("delete/<int:pk>/", view=delete_article, name="delete_article"),
+    path("delete_draft/<int:pk>/", view=delete_draft_article, name="delete_draft"),
     path("<uuid:uuid>/", DetailArticleView.as_view(), name="article"),
 ]
