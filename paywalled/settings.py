@@ -122,7 +122,7 @@ ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda u: "/%s/" % u.username,
 }
 
-LOGIN_REDIRECT_URL = "login_redirect"
+LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 LOGIN_URL = "login"
 LOGOUT_URL = "logout"
