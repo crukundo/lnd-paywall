@@ -206,3 +206,6 @@ LND_FOLDER = LND_DIR
 LND_MACAROON_FILE = os.path.join(LND_DIR, "data", "chain", "bitcoin", "regtest", "admin.macaroon")
 LND_TLS_CERT_FILE = os.path.join(LND_DIR, "tls.cert")
 LND_NETWORK = 'regtest'
+
+#FOR LNURL
+BASE_URL="https://lnd-paywall.blog"
