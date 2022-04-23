@@ -118,8 +118,6 @@ class EditArticleView(LoginRequiredMixin, AuthorRequiredMixin, UpdateView):
         messages.success(self.request, self.message)
         return reverse("home")
 
-
-@login_required()
 def article_detail(request, article_uuid):
     article = Article.objects.get(uuid=article_uuid)
     # assume the worst first, lol
@@ -127,22 +125,26 @@ def article_detail(request, article_uuid):
     received_payments = None
     invoice = None
 
-    # generate lighting invoice to view article for this user
     try:
-        # check existence of 'to view' payments for this article and this user
-        invoices = article.payments.filter(purpose='view', user=request.user)
+        # check if logged in user has a "to view" invoice and whether paid?
+        if request.user.is_authenticated:
+            invoices = article.payments.filter(purpose='view', user=request.user)
+            if invoices:
+                # we just need THE one
+                invoice = invoices.first()
+                if invoice.status == 'complete':
+                    payment_made = True
+            else:
+                article.generate_view_invoice()
+        article.generate_view_invoice()
+        # check all invoices for a view invoice for this article
+        invoices = article.payments.filter(purpose='view')
         if invoices:
             # we just need THE one
             invoice = invoices.first()
-            if invoice.status == 'complete':
-                payment_made = True
-        else:
-            # if no existing payment objects to view this article by this user
-            article.generate_view_invoice()
     except:
         raise NotImplementedError()
 
-    # check for complete payments
     received_payments = article.payments.filter(status='complete').order_by('-modified_at')
 
     return render(request, "blog/article_detail.html", {
