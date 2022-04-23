@@ -8,7 +8,6 @@
 
 <style>
     .article-content {
-        max-height: 400px;
         position: relative;
         overflow: hidden;
     }
@@ -21,39 +20,28 @@
         text-align: center;
         margin: 0;
         padding: 30px 0;
-
-        /* "transparent" only works here because == rgba(0,0,0,0) */
         background-image: linear-gradient(to bottom, transparent, gray);
     }
 </style>
 <!-- Page Content -->
 <div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ article.title|title }}</li>
-        </ol>
-    </nav>
     <div class="row">
-        <!-- Post Content Column -->
         <div class="col-lg-8">
-            <!-- Title -->
             <h1 class="mt-4">{{ article.title }}</h1>
-            <!-- Author -->
-            <p>Published {{ article.date_published|naturaltime }} by <a
-                    href="#">{{ article.user.profile.get_screen_name }}</a>{% if article.user == request.user %}<a
-                    class="btn btn-link" href="{% url 'articles:edit_article' article.id %}"
-                    title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                    {% trans 'Edit this article' %}</a>{% endif %}
+            <p>Published {{ article.date_published|naturaltime }} by
+                {{ article.user.profile.get_screen_name }}{% if article.user == request.user %}<a
+                    class="btn btn-light ml-3" href="{% url 'articles:edit_article' article.id %}"
+                    title="Edit this article"><i class="bi bi-pencil" aria-hidden="true"></i> Edit this
+                    article</a>{% endif %}
             </p>
             <hr>
-            <!-- Post Content -->
             <div class="article-content">
                 {{ article.content|safe }}
+                {% if not payment_made %}
                 <div class="continue-reading">
                     <div class='alert alert-info mx-5' role='alert'>Pay the invoice below to keep reading</div>
                 </div>
+                {% endif %}
             </div>
             <hr>
             {% if payment_made %}
@@ -68,36 +56,14 @@
             {% endif %}
         </div>
 
-        <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
             <div class="card text-light bg-dark">
                 <div class="card-header"> Total reward: {{ article.get_total_reward.total_reward }} sats</div>
                 <div class="card-body">
                     {% if received_payments %}
                     <ul class="timeline timeline-fluid">
-                        <!-- .timeline-item -->
                         {% for payment in received_payments %}
-                        <li class="timeline-item">
-                            <!-- .timeline-figure -->
-                            <div class="timeline-figure">
-                                <span class="tile tile-circle tile-sm bg-warning"><i
-                                        class="bi bi-lightning-charge-fill"></i></span>
-                            </div><!-- /.timeline-figure -->
-                            <!-- .timeline-body -->
-                            <div class="timeline-body">
-                                <!-- .media -->
-                                <div class="media">
-                                    <!-- .media-body -->
-                                    <div class="media-body">
-                                        <p class="mb-0">
-                                            <a href="#">{{ payment.user.profile.get_screen_name }}</a> paid
-                                            {{ payment.satoshi_amount }} sats to
-                                            {{ payment.get_purpose_display }}
-                                        </p><span class="timeline-date">{{ payment.created_at }}</span>
-                                    </div><!-- /.media-body -->
-                                </div><!-- /.media -->
-                            </div><!-- /.timeline-body -->
-                        </li><!-- /.timeline-item -->
+                        {% include 'partials/article_payment.html' %}
                         {% endfor %}
                     </ul>
                     {% else %}
@@ -107,13 +73,23 @@
             </div>
         </div>
     </div>
-    <!-- /.row -->
 </div>
-<!-- /.container -->
 {% endblock content %}
 
 {% block javascript %}
 <script>
+    var $el, $outerdiv, $nextdiv, divs, totalHeight;
+
+    totalHeight = 0
+    $el = $('.continue-reading');
+    $outerdiv = $el.parent();
+
+    // set the max-height of the content div to 400px on load
+    $outerdiv
+        .css({
+            "max-height": "400px"
+        })
+
     // set a delay to allow the hx-trigger to run first
     var delay = 12000;
     setTimeout(function () {
@@ -121,28 +97,10 @@
         let paymentStatus = $('#paymentStatus').data("status");
 
         if (paymentStatus === "paid") {
-
-            var $el, $outerdiv, $nextdiv, divs, totalHeight;
-
-            totalHeight = 0
-            $el = $('.continue-reading');
-            $outerdiv = $el.parent();
-            $nextdiv = $el.children();
-            $divs = $nextdiv.children();
-
-            // measure how tall inside should be by adding together heights of all inside paragraphs (except read-more paragraph)
-            $divs.each(function () {
-                totalHeight += $(el).outerHeight();
-            });
-
-            $nextdiv
+            // if paid, remove the max-height css property
+            $outerdiv
                 .css({
-                    // Set height to prevent instant jumpdown when max height is removed
-                    "height": $nextdiv.height(),
-                    "max-height": 9999
-                })
-                .animate({
-                    "height": totalHeight
+                    "max-height": ""
                 });
 
             // fade out continue reading

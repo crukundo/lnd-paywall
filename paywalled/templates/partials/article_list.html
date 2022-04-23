@@ -11,11 +11,9 @@
                 <h3 style="font-size:1.3rem" class="list-group-item-title">
                     <a href="{% url 'articles:article' article.uuid %}">{{ article.title }}</a>
                 </h3>
-                <small class="list-group-item-subtitle text-muted">Updated
+                <p class="list-group-item-text mt-2">Updated
                     {{ article.date_published|naturaltime }}
-                    by
-                    {{ article.user.profile.get_screen_name|title }} </small>
-                <p class="list-group-item-text"> Total reward:
+                    . Total views: {{ article.get_view_count }}. Total reward:
                     {{ article.get_total_reward.total_reward }} sats</p>
             </div>
             {% if request.user == article.user %}

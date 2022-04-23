@@ -1,0 +1,17 @@
+<li class="timeline-item">
+    <div class="timeline-figure">
+        <span class="tile tile-circle tile-sm bg-warning"><i class="bi bi-lightning-charge-fill"></i></span>
+    </div>
+    <div class="timeline-body">
+        <div class="media">
+            <div class="media-body">
+                <p class="mb-0">
+                    {{ payment.user.profile.get_screen_name }} paid
+                    {{ payment.satoshi_amount }} sats to
+                    {{ payment.purpose }} {% if mode == 'general' %}<a
+                        href="{{ payment.article.get_absolute_url }}">"{{ payment.article.title }}"</a>{% endif %}
+                </p><span class="timeline-date">{{ payment.created_at }}</span>
+            </div>
+        </div>
+    </div>
+</li>

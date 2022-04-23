@@ -67,7 +67,20 @@
             </div>
 
             <div class="col-md-4">
-                Payment stream
+                <div class="card text-light bg-dark">
+                    <div class="card-header"> Lightning Rewards Stream</div>
+                    <div class="card-body">
+                        {% if payments %}
+                        <ul class="timeline timeline-fluid">
+                            {% for payment in payments %}
+                            {% include 'partials/article_payment.html' with mode="general" %}
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <p>No payments for this article at this time.</p>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

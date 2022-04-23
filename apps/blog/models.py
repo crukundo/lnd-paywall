@@ -60,7 +60,7 @@ class Article(models.Model):
         return self.title
 
     def get_absolute_url(self): 
-        return reverse('article', kwargs=[str(self.uuid)])
+        return reverse('articles:article', kwargs={ "article_uuid": self.uuid })
 
     def generate_pub_invoice(self):
 

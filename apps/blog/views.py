@@ -143,7 +143,7 @@ def article_detail(request, article_uuid):
         raise NotImplementedError()
 
     # check for complete payments
-    received_payments = article.payments.filter(status='complete')
+    received_payments = article.payments.filter(status='complete').order_by('-modified_at')
 
     return render(request, "blog/article_detail.html", {
         'article': article,
