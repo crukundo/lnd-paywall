@@ -7,13 +7,6 @@
 
 {% block content %}
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'articles:drafts' %}">{% trans 'Drafts' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans 'Update an article' %}</li>
-    </ol>
-</nav>
 <form action="{% url 'articles:edit_article' form.instance.pk %}" enctype="multipart/form-data" id="article-form"
     method="post" role="form">
     {% csrf_token %}

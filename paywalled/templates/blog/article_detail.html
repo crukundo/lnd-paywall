@@ -51,6 +51,8 @@
             <div id="publishInvoice" class="mt-3">
                 {% if invoice %}
                 {% include 'partials/partial_invoice.html' with purpose="view" %}
+                {% else %}
+                <p>missing invoice</p>
                 {% endif %}
             </div>
             {% endif %}

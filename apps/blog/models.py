@@ -81,7 +81,7 @@ class Article(models.Model):
         payment_request = add_invoice_resp.payment_request
 
         from apps.payments.models import Payment
-        payment = Payment.objects.create(user=self.user, article=self, purpose=Payment.VIEW, satoshi_amount=settings.MIN_VIEW_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
+        payment = Payment.objects.create(article=self, purpose=Payment.VIEW, satoshi_amount=settings.MIN_VIEW_AMOUNT, r_hash=r_hash, payment_request=payment_request, status='pending_payment')
         payment.save()
 
     def get_view_count(self):

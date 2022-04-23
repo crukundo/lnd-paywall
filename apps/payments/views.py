@@ -39,6 +39,8 @@ def check_payment(request, pk):
         if invoice_resp.settled:
             # Payment complete
             payment.status = 'complete'
+            if request.user.is_authenticated:
+                payment.user = request.user
             payment.save()
             return HttpResponseStopPolling("<div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
         else:

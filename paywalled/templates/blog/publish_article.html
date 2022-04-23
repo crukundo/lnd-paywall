@@ -7,14 +7,6 @@
 
 {% block content %}
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'articles:list' %}">{% trans 'Articles' %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans 'Write a new article' %}</li>
-    </ol>
-</nav>
-
 <form method="POST" action="" id="article-form">
     {% csrf_token %}
     {% crispy form %}

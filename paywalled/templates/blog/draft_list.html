@@ -12,12 +12,7 @@
 
 <!-- Page Content -->
 <div class="container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/">{% trans 'Home' %}</a></li>
-            <li class="breadcrumb-item active"><a href="{% url 'articles:list' %}">{% trans 'Drafts' %}</a></li>
-        </ol>
-    </nav>
+
     <div class="row">
         <!-- Blog Entries Column -->
         <div class="col-md-8 mx-auto">
@@ -30,7 +25,7 @@
                             <div class="list-group-item-figure">
                                 <a href="{% url 'articles:article' article.uuid %}"
                                     class="tile tile-lg tile-circle bg-success">
-                                    <i class="fas fa-bolt fa-fw"></i>
+                                    <i class="bi bi-lightning-charge-fill"></i>
                                 </a>
                             </div>
                             <div class="list-group-item-body">
