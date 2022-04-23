@@ -1,0 +1,29 @@
+{% load humanize %}
+<div class="card mb-4" id="articles">
+    <div class="card-body">
+        <div class="list-group-item">
+            <div class="list-group-item-figure">
+                <a href="{% url 'articles:article' article.uuid %}" class="tile tile-lg tile-circle bg-warning">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                </a>
+            </div>
+            <div class="list-group-item-body">
+                <h3 style="font-size:1.3rem" class="list-group-item-title">
+                    <a href="{% url 'articles:article' article.uuid %}">{{ article.title }}</a>
+                </h3>
+                <small class="list-group-item-subtitle text-muted">Updated
+                    {{ article.date_published|naturaltime }}
+                    by
+                    {{ article.user.profile.get_screen_name|title }} </small>
+                <p class="list-group-item-text"> Total reward:
+                    {{ article.get_total_reward.total_reward }} sats</p>
+            </div>
+            {% if request.user == article.user %}
+            <div class="list-group-item-figure">
+                <a href="{% url 'articles:edit_article' article.pk %}" class="btn btn-sm btn-primary">Edit</a>
+                <a class="btn btn-sm btn-light" href="{% url 'articles:delete_article' article.pk %}">Delete</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>

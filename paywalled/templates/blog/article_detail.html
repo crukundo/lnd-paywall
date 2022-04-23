@@ -39,10 +39,10 @@
         <!-- Post Content Column -->
         <div class="col-lg-8">
             <!-- Title -->
-            <h1 class="mt-4">{{ article.title|title }}</h1>
+            <h1 class="mt-4">{{ article.title }}</h1>
             <!-- Author -->
             <p>Published {{ article.date_published|naturaltime }} by <a
-                    href="#">{{ article.user.profile.get_screen_name |title }}</a>{% if article.user == request.user %}<a
+                    href="#">{{ article.user.profile.get_screen_name }}</a>{% if article.user == request.user %}<a
                     class="btn btn-link" href="{% url 'articles:edit_article' article.id %}"
                     title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     {% trans 'Edit this article' %}</a>{% endif %}

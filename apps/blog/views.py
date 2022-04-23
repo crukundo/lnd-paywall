@@ -77,7 +77,7 @@ def publish_new_article(request, article_uuid):
                 messages.success(request, "Draft: '{}' has been saved successfully".format(article.title))
             article.save()
 
-            return redirect(reverse("articles:list"))
+            return redirect(reverse("home"))
 
     else:
         form = ArticleForm(instance=article)
@@ -99,24 +99,7 @@ def delete_draft_article(request, pk):
 def delete_article(request, pk):
     article = get_object_or_404(Article, pk=pk)
     article.delete()
-    return redirect(reverse("articles:list"))
-
-
-class CreateArticleView(LoginRequiredMixin, CreateView):
-    """Basic CreateView implementation to create new articles."""
-
-    model = Article
-    message = _("Your article has been created.")
-    form_class = ArticleForm
-    template_name = "blog/create_article.html"
-
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        messages.success(self.request, self.message)
-        return reverse("articles:list")
+    return redirect(reverse("home"))
 
 
 class EditArticleView(LoginRequiredMixin, AuthorRequiredMixin, UpdateView):
@@ -133,7 +116,7 @@ class EditArticleView(LoginRequiredMixin, AuthorRequiredMixin, UpdateView):
 
     def get_success_url(self):
         messages.success(self.request, self.message)
-        return reverse("articles:list")
+        return reverse("home")
 
 
 @login_required()

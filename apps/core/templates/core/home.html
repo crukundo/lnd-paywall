@@ -19,47 +19,18 @@
     <div class="container position-relative">
 
         <div class="row">
-            <!-- Blog Entries Column -->
-            <div class="col-md-10 mx-auto">
+            <div class="col-md-8">
                 <h2 class="text-center text-sm-left"> Paywalled</h2>
                 <p class="lead text-muted text-center text-sm-left mb-5">Exploring the lightning network through
-                    micropayments.
-                    Pay a tiny fee to publish, read, edit and comment on articles.</p>
+                    micropayments. Pay a tiny fee to publish, read, edit and comment on articles.</p>
+            </div>
+        </div>
 
-
+        <div class="row">
+            <div class="col-md-8">
                 <div class="list-group list-group-flush list-group-divider">
                     {% for article in articles %}
-                    <!-- Blog Post -->
-                    <div class="card mb-4" id="articles">
-                        <div class="card-body">
-                            <div class="list-group-item">
-                                <div class="list-group-item-figure">
-                                    <a href="{% url 'articles:article' article.uuid %}"
-                                        class="tile tile-lg tile-circle bg-success">
-                                        <i class="fas fa-bolt fa-fw"></i>
-                                    </a>
-                                </div>
-                                <div class="list-group-item-body">
-                                    <h4 class="list-group-item-title">
-                                        <a
-                                            href="{% url 'articles:article' article.uuid %}">{{ article.title|title }}</a>
-                                    </h4>
-                                    <p class="list-group-item-text">{% trans 'Posted' %}
-                                        {{ article.date_published|naturaltime }}
-                                        by
-                                        {{ article.user.profile.get_screen_name|title }} </p>
-                                </div>
-                                {% if request.user == article.user %}
-                                <div class="list-group-item-figure">
-                                    <a href="{% url 'articles:edit_article' article.pk %}"
-                                        class="btn btn-sm btn-primary">Edit</a>
-                                    <a class="btn btn-sm btn-light"
-                                        href="{% url 'articles:delete_article' article.pk %}">Delete</a>
-                                </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                    {% include 'partials/article_list.html' %}
                     {% empty %}
                     <h4 class="no-data">{% trans 'There is no published article yet' %}. <a
                             href="{% url 'articles:write_new' %}">{% trans 'Be the first one to publish one' %}!</a>
@@ -67,6 +38,7 @@
                     {% endfor %}
                 </div>
 
+                <!-- @todo: add pagination to article in home view  -->
                 {% if is_paginated %}
                 <ul class="pagination justify-content-center mb-4">
                     {% if page_obj.has_previous %}
@@ -93,10 +65,12 @@
                 {% endif %}
 
             </div>
-        </div>
-        <!-- /.row -->
 
-    </div><!-- /.container -->
+            <div class="col-md-4">
+                Payment stream
+            </div>
+        </div>
+    </div>
 </section>
 
 {% endblock content %}
