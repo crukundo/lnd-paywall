@@ -11,15 +11,16 @@
                 <h3 style="font-size:1.3rem" class="list-group-item-title">
                     <a href="{% url 'articles:article' article.uuid %}">{{ article.title }}</a>
                 </h3>
-                <p class="list-group-item-text mt-2">Updated
+                <p class="list-group-item-subtitle mt-2">Updated
                     {{ article.date_published|naturaltime }}
-                    . Total views: {{ article.get_view_count }}. Total reward:
+                    . Total paid views: {{ article.get_view_count }}. Total reward:
                     {{ article.get_total_reward.total_reward }} sats</p>
             </div>
             {% if request.user == article.user %}
             <div class="list-group-item-figure">
-                <a href="{% url 'articles:edit_article' article.pk %}" class="btn btn-sm btn-primary">Edit</a>
-                <a class="btn btn-sm btn-light" href="{% url 'articles:delete_article' article.pk %}">Delete</a>
+                <a class="mr-1" href="{% url 'articles:edit_article' article.pk %}"><i class="bi bi-pencil"></i></a>
+                <a class="ml-1" href="{% url 'articles:delete_article' article.pk %}"><i
+                        class="bi bi-trash3-fill"></i></a>
             </div>
             {% endif %}
         </div>
