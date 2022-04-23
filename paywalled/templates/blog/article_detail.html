@@ -42,7 +42,10 @@
             <h1 class="mt-4">{{ article.title|title }}</h1>
             <!-- Author -->
             <p>Published {{ article.date_published|naturaltime }} by <a
-                    href="#">{{ article.user.profile.get_screen_name |title }}</a>
+                    href="#">{{ article.user.profile.get_screen_name |title }}</a>{% if article.user == request.user %}<a
+                    class="btn btn-link" href="{% url 'articles:edit_article' article.id %}"
+                    title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    {% trans 'Edit this article' %}</a>{% endif %}
             </p>
             <hr>
             <!-- Post Content -->
@@ -58,26 +61,50 @@
                 you</div>
             {% else %}
             <div id="publishInvoice" class="mt-3">
-                {% for payment in article.payments.all %}
-                {% include 'partials/partial_invoice.html' %}
-                {% endfor %}
+                {% if invoice %}
+                {% include 'partials/partial_invoice.html' with purpose="view" %}
+                {% endif %}
             </div>
             {% endif %}
         </div>
 
         <!-- Sidebar Widgets Column -->
         <div class="col-md-4">
-
-            <!-- Write Article Widget -->
-            {% if request.user.is_authenticated %}
-            <div class="card my-4">
-                <div class="card-body text-center">
-                    <a class="btn btn-primary" href="{% url 'articles:edit_article' article.id %}"
-                        title="{% trans 'Edit this article' %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                        {% trans 'Edit this article' %}</a>
+            <div class="card text-light bg-dark">
+                <div class="card-header"> Total reward: {{ article.get_total_reward.total_reward }} sats</div>
+                <div class="card-body">
+                    {% if received_payments %}
+                    <ul class="timeline timeline-fluid">
+                        <!-- .timeline-item -->
+                        {% for payment in received_payments %}
+                        <li class="timeline-item">
+                            <!-- .timeline-figure -->
+                            <div class="timeline-figure">
+                                <span class="tile tile-circle tile-sm bg-warning"><i
+                                        class="bi bi-lightning-charge-fill"></i></span>
+                            </div><!-- /.timeline-figure -->
+                            <!-- .timeline-body -->
+                            <div class="timeline-body">
+                                <!-- .media -->
+                                <div class="media">
+                                    <!-- .media-body -->
+                                    <div class="media-body">
+                                        <p class="mb-0">
+                                            <a href="#">{{ payment.user.profile.get_screen_name }}</a> paid
+                                            {{ payment.satoshi_amount }} sats to
+                                            {{ payment.get_purpose_display }}
+                                        </p><span class="timeline-date">{{ payment.created_at }}</span>
+                                    </div><!-- /.media-body -->
+                                </div><!-- /.media -->
+                            </div><!-- /.timeline-body -->
+                        </li><!-- /.timeline-item -->
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p>No payments for this article at this time.</p>
+                    {% endif %}
                 </div>
             </div>
-            {% endif %}
         </div>
     </div>
     <!-- /.row -->

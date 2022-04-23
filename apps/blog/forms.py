@@ -35,9 +35,9 @@ class ArticleForm(forms.ModelForm):
                 <div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>
                 {% else %}
                 <div id="publishInvoice" class="mt-3">
-                    {% for payment in article.payments.all %}
-                    {% include 'partials/partial_invoice.html' %}
-                    {% endfor %}
+                    {% if invoice %}
+                    {% include 'partials/partial_invoice.html' with purpose='publish' %}
+                    {% endif %}
                 </div>
                 {% endif %}
                 """

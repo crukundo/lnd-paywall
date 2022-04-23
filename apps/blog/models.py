@@ -7,6 +7,7 @@ from slugify import slugify
 from markdownx.models import MarkdownxField
 from markdownx.utils import markdownify
 import uuid
+from django.db.models import Sum
 
 import codecs
 from lnd_grpc import lnd_grpc
@@ -85,3 +86,6 @@ class Article(models.Model):
 
     def get_view_count(self):
         return self.payments.filter(status="complete", purpose="view").count()
+
+    def get_total_reward(self):
+        return self.payments.filter(status="complete").aggregate(total_reward=Sum('satoshi_amount'))

@@ -32,29 +32,36 @@ def list_articles(request):
 def create_new_article(request):
     article = Article.objects.create(user=request.user)
     article.save()
-    # generate lighting invoice
+
     try:
         article.generate_pub_invoice()
     except:
         raise NotImplementedError()
 
-    return redirect(reverse("articles:publish_article", kwargs={'article_uuid': article.uuid}))
+    return redirect(reverse("articles:publish_article", kwargs={
+        'article_uuid': article.uuid
+    }))
 
 @login_required()
 def publish_new_article(request, article_uuid):
 
     article = request.user.articles.get(uuid=article_uuid)
-
+    invoice = None
     payment_made = False
 
-    # check if there's a logged payment
     try:
-        payment = article.payments.filter(purpose='publish', status='complete').first()
-        if payment:
-            payment_made = True
-
+        # check existence of 'to publish' payments for this article and this user
+        invoices = article.payments.filter(purpose='publish', user=request.user)
+        if invoices:
+            # we just need THE one
+            invoice = invoices.first()
+            if invoice.status == 'complete':
+                payment_made = True
+        else:
+            # if no existing payment objects to view this article by this user
+            article.generate_pub_invoice()
     except:
-            payment = None
+        raise NotImplementedError()
 
     if request.method == "POST":
         form = ArticleForm(request.POST, instance=article)
@@ -78,6 +85,7 @@ def publish_new_article(request, article_uuid):
     return render(request, "blog/publish_article.html", {
         'article': article,
         'form': form,
+        'invoice': invoice,
         'payment_made': payment_made
     })
 
@@ -133,15 +141,17 @@ def article_detail(request, article_uuid):
     article = Article.objects.get(uuid=article_uuid)
     # assume the worst first, lol
     payment_made = False
+    received_payments = None
+    invoice = None
 
-    # generate lighting invoice to view article
+    # generate lighting invoice to view article for this user
     try:
         # check existence of 'to view' payments for this article and this user
-        payments = article.payments.filter(purpose='view', user=request.user)
-        if payments:
+        invoices = article.payments.filter(purpose='view', user=request.user)
+        if invoices:
             # we just need THE one
-            payment = payments.first()
-            if payment.status == 'complete':
+            invoice = invoices.first()
+            if invoice.status == 'complete':
                 payment_made = True
         else:
             # if no existing payment objects to view this article by this user
@@ -149,9 +159,14 @@ def article_detail(request, article_uuid):
     except:
         raise NotImplementedError()
 
+    # check for complete payments
+    received_payments = article.payments.filter(status='complete')
+
     return render(request, "blog/article_detail.html", {
         'article': article,
-        'payment_made': payment_made
+        'invoice': invoice,
+        'payment_made': payment_made,
+        'received_payments': received_payments
     })
 
 # @todo: on edit, check if lightning publish invoice has expired and create a new one. Also mark payment as expired
