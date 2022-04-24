@@ -80,3 +80,6 @@ Start the application backend by running the command:
 - Make writers pay to edit their posts 😈
 - Add a section for writers with content to claim their rewards and facilitating channel opening to their lnd node through their shared public key
 - Possibly add [LNURL-auth](https://github.com/fiatjaf/lnurl-rfc/blob/legacy/lnurl-auth.md) and replace the ordinary user accounts authentication system
+
+## Special Credit
+- [Will Clark](https://github.com/willcl-ark)'s `lnd-grpc` library that allows the application to interface with the lnd ligtning client gRPC
