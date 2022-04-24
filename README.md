@@ -16,15 +16,15 @@ Create a virtual environment, clone this repo and install dependencies
 % pip install -r requirements.txt
 ```
 
+## Database
+This project uses sqlite3. Feel free to use whatever engine you want and reference it in your `.env` and settings.py
+
 ## Configuration
 
 Once all the dependencies have been installed, you can then create a `.env` file in the root of the project that contains all the configuration parameters for your instance. I added a sample file you can update. Remember to rename as `.env` and add to `.gitignore`
 
 The following are a list of currently available configuration options and a 
 short explanation of what each does.
-
-`DATABASE_URL` (required; e.g. *sqlite:///bifrost.db*)
-This specifies the SQLite3 database file and path to it.
 
 `LND_FOLDER` (required)
 This is the path to your lnd folder. There should be read access to this path
@@ -49,8 +49,11 @@ If the GRPC port for your node was changed to anything other than the default
 you'll need to update this as well.
 
 `MIN_VIEW_AMOUNT` = 1500 (number of satoshis to pay to view an article)
+
 `MIN_PUBLISH_AMOUNT` = 2100 (number of satoshis to pay to publish an article)
+
 `PUBLISH_INVOICE_EXPIRY` = 604800 (time until a created lightning invoice to publish an article expires)
+
 `VIEW_INVOICE_EXPIRY` = 10800 (time until a created lightning invoice to view an article expires)
 
 
@@ -73,7 +76,7 @@ Start the application backend by running the command:
 
 ## Pending matters
 
-- Setup [LNURL-auth](https://github.com/fiatjaf/lnurl-rfc/blob/legacy/lnurl-auth.md) and remove user accounts
 - Add comment section
 - Make writers pay to edit their posts 😈
 - Add a section for writers with content to claim their rewards and facilitating channel opening to their lnd node through their shared public key
+- Possibly add [LNURL-auth](https://github.com/fiatjaf/lnurl-rfc/blob/legacy/lnurl-auth.md) and replace the ordinary user accounts authentication system
