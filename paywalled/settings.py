@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 
 from pathlib import Path
+from decouple import config, Csv
+from django import conf
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent
@@ -22,13 +24,13 @@ LND_DIR = os.path.join(os.path.join(os.environ['HOME']), 'app-container', '.lnd'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-q(@ma%((*zkx*b-^)9c)acq0f=$r=m2t@!nx5ai5n0!pw7(h4#'
+SECRET_KEY = config("SECRET_KEY", default="")
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = DJANGO_DEBUG = True
+DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="127.0.0.1,localhost", cast=Csv())
 
 
 # Application definition
@@ -132,7 +134,7 @@ LOGOUT_URL = "logout"
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Africa/Kampala'
+TIME_ZONE = config("TIME_ZONE", default="UTC")
 
 USE_I18N = True
 
@@ -180,8 +182,6 @@ DEBUG_TOOLBAR_CONFIG = {
 # TINYMCE
 # ==============================================================================
 
-# TINYMCE_COMPRESSOR=True
-
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
     "height": 400,
@@ -197,15 +197,12 @@ TINYMCE_DEFAULT_CONFIG = {
 
 
 # PAYWALL SETTINGS
-MIN_VIEW_AMOUNT = 1500
-MIN_PUBLISH_AMOUNT = 2100
-PUBLISH_INVOICE_EXPIRY = 604800 # 7 days
-VIEW_INVOICE_EXPIRY = 10800 # 3 hours
+MIN_VIEW_AMOUNT = config("MIN_VIEW_AMOUNT", default="1500")
+MIN_PUBLISH_AMOUNT = config("MIN_PUBLISH_AMOUNT", default="2100")
+PUBLISH_INVOICE_EXPIRY = config("PUBLISH_INVOICE_EXPIRY", default="604800")
+VIEW_INVOICE_EXPIRY = config("VIEW_INVOICE_EXPIRY", default="10800")
 
-LND_FOLDER = LND_DIR
-LND_MACAROON_FILE = os.path.join(LND_DIR, "data", "chain", "bitcoin", "regtest", "admin.macaroon")
-LND_TLS_CERT_FILE = os.path.join(LND_DIR, "tls.cert")
-LND_NETWORK = 'regtest'
-
-#FOR LNURL
-BASE_URL="https://lnd-paywall.blog"
+LND_FOLDER = config("LND_FOLDER", default="")
+LND_MACAROON_FILE = config("LND_MACAROON_FILE", default="")
+LND_TLS_CERT_FILE = config("LND_TLS_CERT_FILE", default="")
+LND_NETWORK = config("LND_NETWORK", default="regtest")
