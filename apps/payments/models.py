@@ -7,6 +7,7 @@ from lnd_grpc import lnd_grpc
 
 from django.http import HttpRequest, HttpResponse
 from django.conf import settings
+from django.contrib.sessions.models import Session
 
 import lnd_grpc.protos.rpc_pb2 as ln
 
@@ -45,6 +46,7 @@ class Payment(models.Model):
         related_name="payments",
         on_delete=models.SET_NULL,
     )
+    session_key = models.CharField(max_length=40, blank=True, null=True)
     article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='payments')
     purpose = models.CharField(max_length=10, choices=PAYMENT_PURPOSE_CHOICES)
 

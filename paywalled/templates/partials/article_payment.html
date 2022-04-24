@@ -6,7 +6,8 @@
         <div class="media">
             <div class="media-body">
                 <p class="mb-0">
-                    {{ payment.user.profile.get_screen_name }} paid
+                    {% if payment.user %}{{ payment.user.profile.get_screen_name }}{% else %}<i
+                        class="bi bi-question-circle-fill"></i> {% endif %} paid
                     {{ payment.satoshi_amount }} sats to
                     {{ payment.purpose }} {% if mode == 'general' %}<a
                         href="{{ payment.article.get_absolute_url }}">"{{ payment.article.title }}"</a>{% endif %}
@@ -15,3 +16,4 @@
         </div>
     </div>
 </li>
+ytu3d6wd2ru3lgx34j883hl1hi7y2ijc

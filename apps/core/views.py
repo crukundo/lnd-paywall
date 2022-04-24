@@ -4,6 +4,7 @@ from django.views.generic import RedirectView
 from apps.blog.models import Article
 from apps.payments.models import Payment
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponse
 
 # Create your views here.
 

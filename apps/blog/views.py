@@ -126,22 +126,35 @@ def article_detail(request, article_uuid):
     invoice = None
 
     try:
+        # create session key if non-existent
+        if not request.session.session_key:
+            request.session.create()
         # check if logged in user has a "to view" invoice and whether paid?
         if request.user.is_authenticated:
             invoices = article.payments.filter(purpose='view', user=request.user)
             if invoices:
                 # we just need THE one
-                invoice = invoices.first()
+                invoice = invoices.last()
                 if invoice.status == 'complete':
                     payment_made = True
+                    # add session key to invoice
+                    invoice.session_key = request.session.session_key
             else:
                 article.generate_view_invoice()
-        article.generate_view_invoice()
-        # check all invoices for a view invoice for this article
-        invoices = article.payments.filter(purpose='view')
-        if invoices:
-            # we just need THE one
-            invoice = invoices.first()
+                invoice = article.payments.filter(purpose='view').latest("created_at")
+        else:
+            # get the most recent "to view" invoice for this particular session
+            invoices = article.payments.filter(purpose='view', session_key=request.session.session_key)
+            if invoices:
+                # we just need THE one
+                invoice = invoices.last()
+                if invoice.status == 'complete':
+                    payment_made = True
+                    # add session key to invoice
+                    invoice.session_key = request.session.session_key
+            else:
+                article.generate_view_invoice()
+                invoice = article.payments.latest("modified_at")
     except:
         raise NotImplementedError()
 

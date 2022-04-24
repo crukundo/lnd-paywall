@@ -37,10 +37,17 @@ def check_payment(request, pk):
 
     if request.htmx:
         if invoice_resp.settled:
+            # create session key
+            if not request.session.session_key:
+                request.session.create()
             # Payment complete
             payment.status = 'complete'
             if request.user.is_authenticated:
                 payment.user = request.user
+                payment.session_key = request.session.session_key
+            else:
+                # if user is anon, save in session
+                payment.session_key = request.session.session_key
             payment.save()
             return HttpResponseStopPolling("<div id='paymentStatus' data-status='paid' class='alert alert-success' role='alert'>Payment confirmed. Thank you</div>")
         else:
