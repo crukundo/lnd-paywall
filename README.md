@@ -2,7 +2,7 @@
 Paywalled is an open blogging platform that enables writers to monetize their content with micropayments enabled by the lightning network. Spend a few sats to publish, view, edit and comment on content. Have fun with lightning. Inspired by Alex Bosworth's [Y'alls](https://yalls.org)
 
 ## A few things
-- This application uses ordinary user accounts for anyone who wants to publish their content. User accounts allow the platform keep track of all due earnings and make it easy to claim them when required. It also makes edits to content much easier for the user. 
+This application uses ordinary user accounts for anyone who wants to publish their content. User accounts allow the platform keep track of all due earnings and make it easy to claim them when required. It also makes edits to content much easier for the user.
 
 You should have [Lnd](https://github.com/lightningnetwork/lnd/) and [bitcoind](https://github.com/bitcoin/bitcoin) setup already. Plus, for testing, I used regtest. It was quicker to setup and focus on building that way but you can use whatever chain you want. More on this in the Configuration section.
 
