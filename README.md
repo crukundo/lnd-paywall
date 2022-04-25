@@ -1,10 +1,14 @@
 # Paywalled
 Paywalled is an open blogging platform that enables writers to monetize their content with micropayments enabled by the lightning network. Spend a few sats to publish, view, edit and comment on content. Have fun with lightning. Inspired by Alex Bosworth's [Y'alls](https://yalls.org)
 
+![Paywalled](https://github.com/crukundo/lnd-paywall/blob/main/paywalled.png?raw=true)
+
 ## A few things
 This application uses ordinary user accounts for anyone who wants to publish their content. User accounts allow the platform keep track of all due earnings and make it easy to claim them when required. It also makes edits to content much easier for the user.
 
 You should have [Lnd](https://github.com/lightningnetwork/lnd/) and [bitcoind](https://github.com/bitcoin/bitcoin) setup already. Plus, for testing, I used regtest. It was quicker to setup and focus on building that way but you can use whatever chain you want. More on this in the Configuration section.
+
+I also wrote a blog about this, you can read [here](https://rukundo.mataroa.blog/blog/i-built-a-blogging-platform-powered-by-the-lightning-network/)
 
 ## Setup
 Create a virtual environment, clone this repo and install dependencies
@@ -83,3 +87,4 @@ Start the application backend by running the command:
 
 ## Special Credit
 - Will Clark's [lnd-grpc](https://github.com/willcl-ark/lnd_grpc) - a python3 gRPC client for LND that did some heavy lifting. 
+- The incredible supportive team at [Qala](https://qala.dev)
